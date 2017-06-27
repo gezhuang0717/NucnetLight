@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--////////////////////////////////////////////////////////////////////////////
+// <file type="public">
+//
+//   <license>
+//     Please see the src/README.txt in this distribution for more copyright
+//     and license information.
+//   </license>
+//
+//   <description>
+//     <abstract>
+//       xml file giving the release log
+//     </abstract>
+//     <keywords>
+//       xml, example, releases
+//     </keywords>
+//   </description>
+//
+//   <authors>
+//     <current>
+//       <author userid="mbradle" start_date="2011/05/05" />
+//     </current>
+//     <previous>
+//     </previous>
+//   </authors>
+//
+//   <compatibility>
+//     Tested in mozilla, firefox.
+//   </compatibility>
+//
+// </file>
+/////////////////////////////////////////////////////////////////////////////-->
+
+<release_log>
+
+  <release
+    name = "0.15"
+    date = "2014/06/21"
+  >
+    <fix>
+      <item>
+        Missing element row and column assignments have been added to
+        the element copier.
+      </item>
+    </fix>
+  </release>
+
+  <release
+    name = "0.14"
+    date = "2012/07/05"
+  >
+    <new>
+      <item>
+        It is now possible to use a string lookup to avoid printing out
+        of matrix element index strings.  This may speed up lookup of
+        elements in large matrices.  To use this, compile with the
+        flag -DWN_USE_MATRIX_LOOKUP.
+      </item>
+    </new>
+    <fix>
+      <item>
+        Some typos have been fixed.
+      </item>
+      <item>
+        The code now uses extern "C" for C++ compilers.
+      </item>
+    </fix>
+    <reorganization>
+      <item>
+        The examples Makefile has been cleaned up and simplified.
+      </item>
+    </reorganization>
+  </release>
+
+  <release
+    name = "0.13"
+    date = "2011/05/09"
+  >
+    <new>
+      <item>
+        Code is now hosted at SourceForge.net.
+      </item>
+      <item>
+        A new API routine allows users to update matrix elements.
+      </item>
+      <item>
+        The examples/ directory now includes a regression test script
+        generator.
+      </item>
+    </new>
+    <reorganization>
+      <item>
+        XML schemas are now at SourceForge.net.
+      </item>
+      <item>
+        Examples directory has moved to same level as src/.
+      </item>
+      <item>
+        Example codes now have descriptive names.
+      </item>
+    </reorganization>
+  </release>
+
+  <release
+    name = "0.12"
+    date = "2010/07/19"
+  >
+    <fix>
+      <item>
+        Casts in the data sort routine have been fixed to allow a clean
+        compile with g++.
+      </item>
+      <item>
+        Unreliable floating-point equality comparisons have been fixed.
+      </item>
+    </fix>
+  </release>
+
+  <release
+    name = "0.11"
+    date = "2010/07/03"
+  >
+    <fix>
+      <item>
+        A bug in WnMatrix__getYale() introduced in version 0.8 has been
+        fixed.
+      </item>
+      <item>
+        A number of documentation typos have been fixed.
+      </item>
+    </fix>
+    <reorganization>
+      <item>
+        Extraction of a row or column or conversion to other sparse format
+        is now done with sorted arrays rather than with lists.  This
+        greatly speeds up these operations for large matrices.  The cost
+        is somewhat greater memory required to store matrix elements.
+      </item>
+    </reorganization>
+  </release>
+
+  <release
+    name = "0.10"
+    date = "2009/08/21"
+  >
+    <new>
+      <item>
+        Routines to remove and insert rows and columns have been added to
+        the API.
+      </item>
+      <item>
+        An example to demonstrate the new API routines has been added to
+        the distribution.
+      </item>
+    </new>
+    <fix>
+      <item>
+        Some typos in technical reports and documentation have been fixed.
+      </item>
+    </fix>
+  </release>
+
+  <release
+    name = "0.9"
+    date = "2009/04/03"
+  >
+    <fix>
+      <item>
+        A number of casts have been fixed to eliminate warnings from
+        4.3 series GNU compilers (thanks to Yeunjin Kim for reporting
+        these warnings).
+      </item>
+    </fix>
+  </release>
+
+  <release
+    name = "0.8"
+    date = "2009/03/12"
+  >
+    <new>
+      <item>
+        A new "arrow" matrix structure, WnMatrix__Arrow, has been added along
+        with an efficient Gaussian elimination solver,
+        WnMatrix__Arrow__solve( ), based on it.
+      </item>
+      <item>
+        A new technical report describes the WnMatrix__Arrow structure and
+        its associated solver.
+      </item>
+      <item>
+        New examples demonstrate the WnMatrix__Arrow API.
+      </item>
+    </new>
+    <fix>
+      <item>
+        A number of typos in the API documentation have been fixed.
+      </item>
+    </fix>
+    <reorganization>
+      <item>
+        The routine WnMatrix__Coo__writeToXmlFile( ), 
+        WnMatrix__Csr__writeToXmlFile( ), WnMatrix__Yale__writeToXmlFile( ),
+        and WnMatrix__write_gsl_vector_to_xml( )
+        now allow the user to provide a format code for the outputting the
+        matrix element or vector component value.  Since the format code
+        is required (even for the default--%g), this is a backwards
+        incompatibility.  Examples have been modified to demonstrate these
+        changes.
+      </item>
+      <item>
+        Matrix element assignments and retrievals in some of the examples have
+        been simplified. 
+      </item>
+      <item>
+        Unsigned longs have been changed to size_t's in some examples.
+      </item>
+      <item>
+        Rows and columns are now correctly sorted because
+        matrix indices are now compared by their long int values instead of 
+        their string values.
+      </item>
+    </reorganization>
+    <internal>
+      <item>
+        Routines to retrieve Coo, Csr, and Yale forms now iterate over lists
+        of rows with non-zero elements.  This should speed up these routines
+        for particularly sparse matrices.
+      </item>
+      <item>
+        Some internal parameters that are size_t's are now more consistently
+        treated.  This should make compilation with 64-bit machines smoother.
+      </item>
+    </internal>
+  </release>
+
+  <release
+    name = "0.7"
+    date = "2008/06/05"
+  >
+    <new>
+      <item>
+        Module is now dependent on gnu gsl.
+      </item>
+      <item>
+        Routines have been added to the API to allow the user to validate
+        input vector data as xml, to parse in vector data from xml, and
+        to write gsl_vector data to an xml file.
+      </item>
+      <item>
+        Routines have been added to the API to allow the user to get the
+        size of and the data array of a gsl_vector.
+      </item>
+      <item>
+        A new routine WnMatrix__solve() has been added to the API to allow the
+        user to solve matrix equations using gsl lu decomposition routines.
+      </item>
+      <item>
+        WnMatrix__getDenseMatrix() routine has been replaced with
+        WnMatrix__getGslMatrix.  This is creates a backwards incompatibility
+        for wn_matrix, and users should upgrade to this new version.
+      </item>
+      <item>
+        WnMatrix__getMatrixTimesVector() and
+        WnMatrix__getTransposeMatrixTimesVector() have been 
+        replaced with WnMatrix__computeMatrixTimesVector() and
+        WnMatrix__computeTransposeMatrixTimesVector().
+        This is creates a backwards incompatibility for wn_matrix, and users
+        should upgrade to this new version.
+      </item>
+      <item>
+        Example codes have been added to demonstrate the new API routines.
+      </item>
+    </new>
+    <fix>
+      <item>
+        Several typos in the documentation and in the example files
+        have been fixed.
+      </item>
+    </fix>
+    <reorganization>
+      <item>
+        Routines that return data as a new double array now return them as
+        a gsl_vector structure.
+      </item>
+    </reorganization>
+  </release>
+
+  <release
+    name = "0.6"
+    date = "2008/03/28"
+  >
+    <fix>
+      <item>
+        An index offset problem in WnMatrix__getDiagonalElements() has 
+        been fixed.
+      </item>
+      <item>
+        Several typos in the documentation have been fixed.
+      </item>
+      <item>
+        Missing examples have been added to the cleanall command in the
+        examples Makefile.
+      </item>
+    </fix>
+    <reorganization>
+      <item>
+        Copyright and license information is now only included in README.txt
+        files for distribution directories to shorten file lengths.
+      </item>
+    </reorganization>
+  </release>
+
+  <release
+    name = "0.5"
+    date = "2007/12/02"
+  >
+    <new>
+      <item>
+        Routines to output matrix data in coordinate, compressed sparse row,
+        and Yale sparse matrix formats in XML files have been added to the
+        API.
+      </item>
+      <item>
+        A routine to read in matrix data from an XML file has been added to
+        the API.
+      </item>
+      <item>
+        Examples 3 and 4 in the tutorial have been rewritten to demonstrate
+        the new API routines.
+      </item>
+      <item>
+        New examples demonstrate the new XML API routines.
+      </item>
+      <item>
+        A new version of the technical report briefly describes the new
+        API routines.
+      </item>
+    </new>
+    <fix>
+      <item>
+        A misallocation of memory in the routine WnMatrix__getCsr() has
+        been fixed so that there is no longer a problem if the number
+        of rows exceeds the number of non-zero matrix elements.
+      </item>
+      <item>
+        Several typos in the documentation have been fixed.
+      </item>
+    </fix>
+    <reorganization>
+      <item>
+        FILE pointers in several examples have been renamed.
+      </item>
+      <item>
+        Several examples no longer declare arrays to retrieve coordinate,
+        CSR, or Yale sparse matrix data but rather retrieve the data directly.
+      </item>
+      <item>
+        A dot-slash has been added to the command-line execution call in the
+        examples tutorial.  We thank Cal Jordan for this suggestion.
+      </item>
+    </reorganization>
+  </release>
+
+  <release
+    name = "0.4"
+    date = "2007/10/05"
+  >
+    <new>
+      <item>
+        Routines to get coordinate, compressed sparse row, and Yale
+        sparse matrix versions of the matrix have been rewritten.  These
+        replace previous versions.  This is a backwards incompatibility,
+        so users should certainly upgrade.
+      </item>
+      <item>
+        Examples 3 and 4 in the tutorial have been rewritten to demonstrate
+        the new API routines.
+      </item>
+      <item>
+        A new version of the technical report briefly describes the new
+        data structures.
+      </item>
+      <item>
+        The data_pub directory in the distribution no longer includes the
+        output files.
+      </item>
+    </new>
+    <fix>
+      <item>
+        A memory leak in WnMatrix__getColumn has been fixed.
+      </item>
+    </fix>
+    <reorganization>
+      <item>
+        The examples tutorial now presents the line numbers in the example
+        codes of the API routines demonstrated.
+      </item>
+    </reorganization>
+  </release>
+
+  <release
+    name = "0.3"
+    date = "2007/07/23"
+  >
+    <new>
+      <item>
+        Routines to get a copy of a matrix and the transpose of a matrix
+        have been added to the API.
+      </item>
+      <item>
+        Example 9, which demonstrates the new API routines, has been added.
+      </item>
+    </new>
+    <fix>
+      <item>
+        API routines WnMatrix__clear and WnMatrix__scaleMatrix have been
+        fixed.
+      </item>
+      <item>
+        Example codes no longer have any cases of incorrectly
+        assigning integers instead of double as values to matrix elements.
+      </item>
+      <item>
+        Makefile now compiles with GNU GSL recommended flags for gcc.
+      </item>
+      <item>
+        Example in documentation for API routine
+        WnMatrix__Line__getNumberOfElements is now correct.
+      </item>
+      <item>
+        Documentation for API routine WnMatrix__getDiagonalElements is now
+        correct.
+      </item>
+    </fix>
+  </release>
+
+  <release
+    name = "0.2"
+    date = "2007/07/06"
+  >
+    <new>
+      <item>
+        Initial Release
+      </item>
+    </new>
+  </release>
+
+  <release
+    name = "0.1"
+    date = "2006/11/08"
+  >
+    <new>
+      <item>
+        Internal Release only.
+      </item>
+    </new>
+  </release>
+
+</release_log>

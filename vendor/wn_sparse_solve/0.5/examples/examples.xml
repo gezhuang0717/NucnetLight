@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<!--////////////////////////////////////////////////////////////////////////////
+// <file type="public">
+//
+//   <license>
+//     See src/README.txt for this module for license and copyright
+//     information.
+//   </license>
+//
+//   <description>
+//     <abstract>
+//       xml file giving description and call sequence for examples codes.
+//     </abstract>
+//     <keywords>
+//       xml, example, code
+//     </keywords>
+//   </description>
+//
+//   <authors>
+//     <current>
+//       <author userid="mbradle" start_date="2010/03/14" />
+//     </current>
+//     <previous>
+//     </previous>
+//   </authors>
+//
+//   <compatibility>
+//     Tested in mozilla, firefox.
+//   </compatibility>
+//
+// </file>
+/////////////////////////////////////////////////////////////////////////////-->
+
+<examples>
+
+  <general_information>
+
+  <module>wn_sparse_solve</module>
+
+  <api_doc_files>
+
+    <file name="WnSparseSolve.h">
+      <structures>
+        <structure>WnSparseSolve__Mat</structure>
+        <structure>WnSparseSolve__Exp</structure>
+        <structure>WnSparseSolve__Phi</structure>
+      </structures>
+    </file>
+
+  </api_doc_files>
+
+  <other_files>
+    <file>ilu_solvers.c</file>
+    <file>ilu_solvers.h</file>
+    <file>my_convergence_tester.c</file>
+    <file>my_convergence_tester.h</file>
+    <file>print_out.c</file>
+    <file>solution_check.c</file>
+  </other_files>
+
+  <authors>
+    <author>
+      <name>mbradle</name>
+      <date>2007/12/14</date>
+    </author>
+  </authors>
+
+  <intro>
+    This tutorial demonstrates how to use the example codes in the
+    wn_sparse_solve distribution examples directory. The sample input files
+    used in the tutorial are included in the distribution release and may be
+    located in the data_pub directory.
+  </intro>
+
+  </general_information>
+
+  <example_class name="WnSparseSolve">
+
+  <example name="basic_solve_sparse">
+    <title>
+       Solve a sparse matrix equation without preconditioning.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/matrix.xml</item>
+        <item type="arg">../data_pub/rhs.xml</item>
+        <item type="arg">gmres</item>
+        <item type="arg">10</item>
+        <item type="arg">1.e-4</item>
+        <item type="arg">1.e-4</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        Try other solvers.  For example, to use the biconjugate gradient
+        solver instead of the gmres solver, type
+      </note>
+      <in>
+        <item type="arg">../data_pub/matrix.xml</item>
+        <item type="arg">../data_pub/rhs.xml</item>
+        <item type="arg">bcg</item>
+        <item type="arg">10</item>
+        <item type="arg">1.e-4</item>
+        <item type="arg">1.e-4</item>
+      </in>
+      <out>
+        <item type="file">output_bcg.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        In this example, and all subsequent ones, you can also print out
+        information about the solution iterations.  For example, type
+      </note>
+      <in>
+        <item type="arg">../data_pub/matrix.xml</item>
+        <item type="arg">../data_pub/rhs.xml</item>
+        <item type="arg">bcg</item>
+        <item type="arg">10</item>
+        <item type="arg">1.e-4</item>
+        <item type="arg">1.e-4</item>
+        <item type="arg">debug</item>
+      </in>
+      <out>
+        <item type="file">output_debug.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="solve_sparse_with_user_supplied_convergence_tester">
+    <title>
+       Solve a sparse matrix equation using a user-supplied convergence
+       tester.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/matrix.xml</item>
+        <item type="arg">../data_pub/rhs.xml</item>
+        <item type="arg">bcg</item>
+        <item type="arg">20</item>
+        <item type="arg">1.e-4</item>
+        <item type="arg">1.e-4</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  
+  </example>
+
+  <example name="solve_sparse_with_user_supplied_preconditioner">
+    <title>
+       Solve a sparse matrix equation using a user-supplied preconditioner
+       matrix.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/matrix.xml</item>
+        <item type="arg">../data_pub/preconditioner.xml</item>
+        <item type="arg">../data_pub/rhs.xml</item>
+        <item type="arg">gmres</item>
+        <item type="arg">20</item>
+        <item type="arg">1.e-4</item>
+        <item type="arg">1.e-4</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="solve_sparse_with_ilu_preconditioner">
+    <title>
+       Solve a sparse matrix equation using SPARSKIT's incomplete lu
+       decompositon routines for the preconditioner solves.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/matrix.xml</item>
+        <item type="arg">../data_pub/rhs.xml</item>
+        <item type="arg">gmres</item>
+        <item type="arg">10</item>
+        <item type="arg">1.e-4</item>
+        <item type="arg">1.e-4</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  
+  </example>
+
+  <example name="solve_sparse_with_exppro">
+    <title>
+       Solve the linear matrix equation dY/dt = AY with Sparskit.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/exp_matrix.xml</item>
+        <item type="arg">../data_pub/exp_initial_vector.xml</item>
+        <item type="arg">1</item>
+        <item type="arg">10</item>
+        <item type="arg">20</item>
+        <item type="arg">1.e-4</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  
+  </example>
+
+  <example name="solve_sparse_with_phipro">
+    <title>
+       Solve the linear matrix equation dY/dt = AY + P with Sparskit.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/phi_matrix.xml</item>
+        <item type="arg">../data_pub/phi_initial_vector.xml</item>
+        <item type="arg">../data_pub/phi_constant_vector.xml</item>
+        <item type="arg">1</item>
+        <item type="arg">10</item>
+        <item type="arg">20</item>
+        <item type="arg">1.e-4</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  
+  </example>
+
+  </example_class>
+
+</examples>

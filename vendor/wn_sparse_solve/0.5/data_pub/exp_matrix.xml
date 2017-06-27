@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<coo:matrix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:coo="http://www.webnucleo.org/home/modules/wn_matrix/0.7/xsd_pub/coordinate_matrix/" xsi:schemaLocation="http://www.webnucleo.org/home/modules/wn_matrix/0.7/xsd_pub/coordinate_matrix/ http://www.webnucleo.org/home/modules/wn_matrix/0.7/xsd_pub/coordinate_matrix.xsd">
+  <element>
+    <row>1</row>
+    <column>1</column>
+    <value>-2</value>
+  </element>
+  <element>
+    <row>1</row>
+    <column>2</column>
+    <value>2</value>
+  </element>
+  <element>
+    <row>1</row>
+    <column>3</column>
+    <value>1</value>
+  </element>
+  <element>
+    <row>2</row>
+    <column>1</column>
+    <value>1</value>
+  </element>
+  <element>
+    <row>2</row>
+    <column>2</column>
+    <value>-3</value>
+  </element>
+  <element>
+    <row>2</row>
+    <column>3</column>
+    <value>2</value>
+  </element>
+  <element>
+    <row>3</row>
+    <column>1</column>
+    <value>1</value>
+  </element>
+  <element>
+    <row>3</row>
+    <column>2</column>
+    <value>1</value>
+  </element>
+  <element>
+    <row>3</row>
+    <column>3</column>
+    <value>-3</value>
+  </element>
+</coo:matrix>

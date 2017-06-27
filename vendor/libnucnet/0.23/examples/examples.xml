@@ -1,0 +1,1584 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<!--////////////////////////////////////////////////////////////////////////////
+// <file type="public">
+//
+//   <license>
+//     See README_module.xml for this module for license and copyright
+//     information.
+//   </license>
+//
+//   <description>
+//     <abstract>
+//       xml file giving description and call sequence for examples codes.
+//     </abstract>
+//     <keywords>
+//       xml, example, code
+//     </keywords>
+//   </description>
+//
+//   <authors>
+//     <current>
+//       <author userid="mbradle" start_date="2007/08/01" />
+//       <author userid="pallen" start_date="2007/08/01" />
+//     </current>
+//     <previous>
+//     </previous>
+//   </authors>
+//
+//   <compatibility>
+//     Tested in mozilla, firefox.
+//   </compatibility>
+//
+// </file>
+/////////////////////////////////////////////////////////////////////////////-->
+
+<examples>
+
+  <general_information>
+
+  <module>libnucnet</module>
+
+  <api_doc_files>
+
+    <file name="Libnucnet__Nuc.h">
+      <structures>
+        <structure>Libnucnet__Nuc</structure>
+        <structure>Libnucnet__NucView</structure>
+        <structure>Libnucnet__Species</structure>
+      </structures>
+    </file>
+
+    <file name="Libnucnet__Reac.h">
+      <structures>
+        <structure>Libnucnet__Reac</structure>
+        <structure>Libnucnet__ReacView</structure>
+        <structure>Libnucnet__Reaction</structure>
+      </structures>
+    </file>
+
+    <file name="Libnucnet.h">
+      <structures>
+        <structure>Libnucnet</structure>
+        <structure>Libnucnet__Net</structure>
+        <structure>Libnucnet__NetView</structure>
+        <structure>Libnucnet__Zone</structure>
+      </structures>
+    </file>
+
+  </api_doc_files>
+
+  <other_files>
+    <file>README.txt</file>
+    <file>coul_corr.c</file>
+    <file>coul_corr.h</file>
+    <file>remove_duplicate.c</file>
+    <file>remove_duplicate.h</file>
+    <file>screen.c</file>
+    <file>screen.h</file>
+    <file>user_rate_functions.c</file>
+    <file>user_rate_functions.h</file>
+  </other_files>
+
+  <authors>
+    <author>
+      <name>mbradle</name>
+      <date>2007/08/01</date>
+    </author>
+  </authors>
+
+  <intro>
+    This tutorial demonstrates how to use example codes in the libnucnet
+    distribution src/examples directory. The sample input files
+    used in the tutorial are included in the distribution release and may be
+    located in the data_pub directory.
+  </intro>
+
+  </general_information>
+
+  <example_class name="Libnucnet__Nuc">
+
+  <example name="create_nuc_collection">
+    <title>
+       Create a collection of nuclei, add species, and remove them.
+    </title>
+    <execution>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="create_nuc_xml_from_text">
+    <title>
+       Create a collection of nuclei, add species, and write data
+       to an xml file.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.txt</item>
+      </in>
+      <out>
+        <item type="arg">output.xml</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="validate_nuc_xml">
+    <title>
+       Validate a Libnucnet__Nuc input xml file against Webnucleo's
+       schema.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+      </in>
+      <out>
+        <item type="screen">Valid input Libnucnet__Nuc xml file!</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        To validate a file that uses XInclude, type:
+      </note>
+      <in>
+        <item>../data_pub/example_nuc_include.xml</item>
+      </in>
+      <out>
+        <item type="screen">Valid input Libnucnet__Nuc xml file!</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        To see what happens when the input xml is invalid (the following input
+        file has a negative mass number for the neutron), type:
+      </note>
+      <in>
+        <item>../data_pub/example_nuc_wrong.xml</item>
+      </in>
+      <out>
+        <item type="screen">
+../data_pub/example_nuc_wrong.xml:11: element a: Schemas validity error : Element 'a': '-1' is not a valid value of the atomic type '{http://libnucnet.sourceforge.net/xsd_pub/2014-12-13/libnucnet__nuc__types/}a_type'.
+        </item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_nuclides">
+    <title>
+       Create a collection of nuclei from an input xml file and output
+       the data about each species.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        You can also select out certain species with an xpath expression.
+        For example, to select only isotopes of
+        elements between and including neon and calcium, type:
+      </note>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+        <item>"[ z &gt;= 10 and z &lt;= 20 ]"</item>
+      </in>
+      <out>
+        <item type="file">output_xpath.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        Note you can also read data over the web.  For example,
+        to select data from the original example xml file residing at
+        sourceforge, type:
+      </note>
+      <in>
+        <item>http://libnucnet.sourceforge.net/data_pub/2013-02-12/example_nuc.xml</item>
+      </in>
+      <out>
+        <item type="file">web_output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        Finally, note you can also read data that is combined from
+        multiple files using XInclude.  For example, type:
+      </note>
+      <in>
+        <item>../data_pub/example_nuc_include.xml</item>
+      </in>
+      <out>
+        <item type="file">include_output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="create_nuclide_latex_table">
+    <title>
+       Create a latex table of the species in a nuclide collection.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+      </in>
+      <out>
+        <item type="arg">output.tex</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_largest_nucleon_numbers">
+    <title>
+       Create a collection of nuclei from an input xml file and output
+       the largest Z, N, and A in the network.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        You can also select out certain species with an xpath expression.
+        For example, to select only isotopes of
+        elements up to calcium:
+      </note>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+        <item>"[ z &lt;= 20 ]"</item>
+      </in>
+      <out>
+        <item type="file">output_xpath.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="sort_nuclides">
+    <title>
+      Sort the species in a collection of nuclei according to a user-supplied
+      function.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="modify_nuc">
+    <title>
+      Change the data for selected isotopes in a collection using a view.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+      </in>
+      <in>
+        <item>"[z = 10]"</item>
+      </in>
+      <in>
+        <item>1.5</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_nuclear_energies">
+    <title>
+      Print masses, binding energies, and separation energies of species
+      in a nuclear collection.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        To output energies for nuclei only with neutron number 22, type:
+      </note>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+      </in>
+      <in>
+        <item>"[a = 1 or (a - z) = 22]"</item>
+      </in>
+      <out>
+        <item type="file">output_xpath.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="extract_nuc_subset">
+    <title>
+       Create a collection of nuclei from an input xml file and output
+       a subset chosen by an xpath expression to a new file.
+    </title>
+    <execution>
+      <note>
+        To output data about nuclei in the input file with atomic number
+        less than or equal to 10, type:
+      </note>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+      </in>
+      <in>
+        <item>"[z &lt;= 10]"</item>
+      </in>
+      <out>
+        <item type="arg">output.xml</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="update_nuc_data">
+    <title>
+      Create a collection of nuclei from data read over the web,
+      output the data, modify the nuclear data with data from a local file,
+      and output the updated data.
+    </title>
+    <execution>
+      <note>
+        To modify data for Z &lt; 5 from the original Webnucleo.org nuclear
+        data file with data from a local file (the changes are modified data
+        for beryllium-7 and the addition of carbon 12), type at the command
+        line:
+      </note>
+      <in>
+        <item>http://libnucnet.sourceforge.net/data_pub/2013-02-12/example_nuc.xml</item>
+        <item>../data_pub/example_nuc_new.xml</item>
+        <item>"[ z &lt; 5 ]"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_nuc_data_by_name">
+    <title>
+       Create a collection of nuclei from an input xml file
+       and print out data about a
+       particular species selected by its name.
+     </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+        <item>si28</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_nuc_data_by_z_and_a">
+    <title>
+       Create a collection of nuclei from an input xml file and output
+       data about a particular species selected by its charge, mass, and
+       state.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+        <item>13 27</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        When there are multiple states present for the isotope, select them
+        by their state index (for example, g or m):
+      </note>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+        <item>13 26 m</item>
+      </in>
+      <out>
+        <item type="file">state_output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="compute_partf_by_name">
+    <title>
+       Create a collection of nuclei from an input xml file and print out
+       the nuclear partition function for a particular species selected by
+       its name.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+        <item>ca42</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="compute_partf_by_z_and_a">
+    <title>
+       Create a collection of nuclei from an input xml file and print out
+       the nuclear partition function for a particular species selected by
+       its charge, mass, and state.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+        <item>13 27</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        When there are multiple states present for the isotope, select them
+        by their state index (for example, g or m):
+      </note>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+        <item>13 26 m</item>
+      </in>
+      <out>
+        <item type="file">state_output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  </example_class>
+
+  <example_class name="Libnucnet__Reac">
+
+  <example name="create_reac_xml_from_text">
+    <title>
+       Create a collection of nuclear reactions, add reactions from
+       data in a text file, and output the data to an xml file.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_reac.txt</item>
+      </in>
+      <out>
+        <item type="arg">output.xml</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="validate_reac_xml">
+    <title>
+       Validate a Libnucnet__Reac input xml file against Webnucleo's
+       schema.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_reac.xml</item>
+      </in>
+      <out>
+        <item type="screen">Valid input Libnucnet__Reac xml file!</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+         Note you can also validate a file that uses XInclude to combine
+         data.  For example, type:
+      </note>
+      <in>
+        <item>../data_pub/example_reac_include.xml</item>
+      </in>
+      <out>
+        <item type="screen">Valid input Libnucnet__Reac xml file!</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_reactions">
+    <title>
+       Create a collection of nuclear reactions from an input xml file 
+       (including via XInclude and XPointer) and output their reaction strings.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_reac.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        You can also select out certain reactions with an xpath expression.
+        For example, to select only (n,gamma) reactions, type:
+      </note>
+      <in>
+        <item>../data_pub/example_reac.xml</item>
+        <item>"[ reactant = 'n' and product = 'gamma'  ]"</item>
+      </in>
+      <out>
+        <item type="file">output_xpath.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        The input file can also use XInclude and XPointer to combine XML
+        resources.  For example, to include reactions from other XML files,
+        print reactions from a file like the input here:
+      </note>
+      <in>
+        <item>../data_pub/example_reac_include.xml</item>
+      </in>
+      <out>
+        <item type="file">include_output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="number_reactions_in_view">
+    <title>
+       Create a collection of nuclear reactions from an input xml file and
+       print out the total number of reactions and the number in a view.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_reac.xml</item>
+      </in>
+      <in>
+        <item>"[reactant = 'n' and product = 'h1']"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="remove_dup_reactions">
+    <title>
+       Create a collection of nuclear reactions from an input xml file,
+       remove any duplicate reactions from the NACRE data source,
+       and output the updated data.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_reac.xml</item>
+      </in>
+      <out>
+        <item type="arg">output.xml</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="update_reac_data">
+    <title>
+       Create a collection of nuclear reactions from an input xml file over
+       the web, output their reaction strings, update the data from a local
+       xml file, and output the updated data.
+    </title>
+    <execution>
+      <in>
+        <item>http://libnucnet.sourceforge.net/data_pub/2013-02-12/example_reac.xml</item>
+        <item>../data_pub/example_reac_new.xml</item>
+        <item>"[ product = 'h2' ]"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+  
+  <example name="update_reac_data_to_xml">
+    <title>
+       Create a collection of nuclear reactions from an input xml file,
+       update the data from a local xml file, and output the updated data
+       to xml.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_reac.xml</item>
+        <item>../data_pub/example_reac_new.xml</item>
+      </in>
+      <out>
+        <item type="arg">output.xml</item>
+      </out>
+    </execution>
+  </example>
+  
+  <example name="print_dup_factors">
+    <title>
+       Create a collection of nuclear reactions from an input xml file and
+       print out the duplicate reactant and product factors.
+     </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_reac.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        You can also select out certain reactions with an xpath expression.
+        For example, try:
+      </note>
+      <in>
+        <item>../data_pub/example_reac.xml</item>
+        <item>
+          "[ reactant = 'he4' and ( product = 'be9' or product = 'c12' ) ]"
+        </item>
+      </in>
+      <out>
+        <item type="file">output_xpath.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_reactants_and_products">
+    <title>
+       Print out the reactants and products for a reaction.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_reac.xml</item>
+        <item>"ne28 -> na26 + n + n + electron + anti-neutrino_e"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_reac_data_by_string">
+    <title>
+       Create a collection of nuclear reactions from an input xml file
+       and print out the data for a particular reaction chosen by its
+       reaction string.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_reac.xml</item>
+        <item>"si28 + h1 -> p29 + gamma"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_reac_data_by_xpath">
+    <title>
+       Create a collection of nuclear reactions from an input xml file
+       and print out the data for a reaction or reactions
+       chosen by an xpath expression.
+    </title>
+    <execution>
+      <note>
+        To print out the data for all reactions on magnesium-24, type:
+      </note>
+      <in>
+        <item>../data_pub/example_reac.xml</item>
+        <item>"[ reactant = 'mg24' ]"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_rates_at_t9">
+    <title>
+       Create a collection of nuclear reactions from an input xml file
+       and print out the reaction rate at the input temperature.
+    </title>
+    <execution>
+      <note>
+        To compute the rates at a t9 (temperature in billions of K) of 1,
+        type:
+      </note>
+      <in>
+        <item>../data_pub/example_reac.xml</item>
+        <item>1.</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        This routine also can take an xpath expression.  To compute the rates
+        for all (n,gamma) rates at a t9 (temperature in billions of K) of 1,
+        type:
+      </note>
+      <in>
+        <item>../data_pub/example_reac.xml</item>
+        <item>1.</item>
+        <item>"[ reactant = 'n' and product = 'gamma' ]"</item>
+      </in>
+      <out><item type="file">output_xpath.txt</item></out>
+    </execution>
+  </example>
+
+  <example name="print_rates_by_string">
+    <title>
+       Create a collection of nuclear reactions from an input xml file
+       and print the rate as a function of temperature for a particular
+       reaction chosen by its reaction string.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_reac.xml</item>
+        <item>"cl35 + h1 -> ar36 + gamma"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_rates_by_xpath">
+    <title>
+       Create a collection of nuclear reactions from an input xml file
+       and print the rate as a function of temperature for a
+       reaction or reactions chosen by an xpath expression.
+    </title>
+    <execution>
+      <note>
+        To print out the rates as a function of temperature
+        of all reactions with oxygen-16 as a reactant, type:
+      </note>
+      <in>
+        <item>../data_pub/example_reac.xml</item>
+        <item>"[ reactant = 'o16' ]"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  </example_class>
+
+  <example_class name="Libnucnet">
+
+  <example name="merge_net">
+    <title>
+       Merge a nuclear data xml file and a reaction data xml file to 
+       create a single network data xml file.
+    </title>
+    <execution type="non_example">
+      <note>
+        One way to do this is to
+        use xsltproc (which you should have installed as described in the
+        compile tutorial).  To do this, type:
+      </note>
+      <command>xsltproc</command>
+      <in>
+        <item>&#45;&#45;stringparam</item>
+        <item>reac_doc</item>
+        <item>../data_pub/example_reac.xml</item>
+        <item>../xsl_pub/merge_net.xsl</item>
+        <item>../data_pub/example_nuc.xml</item>
+      </in>
+      <out>
+        <item type="file">../data_pub/example_net.xml</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        It is also possible to use libnucnet routines themselves (including
+        the use of XPath expressions).   To create a network with only
+        neutrons and protons and species with Z >= 26, type:
+      </note>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+        <item>../data_pub/example_reac.xml</item>
+        <item>"[(a = 1) or (z &gt;= 26)]"</item>
+      </in>
+      <out>
+        <item type="arg">output_xpath.xml</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_valid_reactions">
+    <title>
+       Create a nuclear reaction network from an input xml file
+       and print the valid reactions (those between nuclei in the network)
+       and the invalid reactions (those between nuclei not in the network).
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_Qvalues">
+    <title>
+      Create a nuclear reaction network from input xml files and print the
+      reaction Q values for the valid reactions.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+        <item>../data_pub/example_reac.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="create_valid_reaction_latex_table">
+    <title>
+       Create a latex table of the valid reactions in a network.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+      </in>
+      <out>
+        <item type="arg">output.tex</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_forward_and_reverse_at_t9">
+    <title>
+      Create a nuclear reaction network from an input xml file and print the
+      forward and reverse rates for all valid reactions at the input
+      temperature.
+    </title>
+    <execution>
+      <note>
+        To print out the forward and reverse rates at t9 = 1, type:
+      </note>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+        <item>1.</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        To print out the forward and reverse rates at t9 = 1 but only for
+        nuclei with atomic number less than or equal to 15 and for
+        reactions that have h1 as a reaction, include XPath expressions:
+      </note>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+        <item>1.</item>
+        <item>"[z &lt;= 15]"</item>
+        <item>"[reactant = 'h1']"</item>
+      </in>
+      <out>
+        <item type="file">output_xpath.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_forward_and_reverse_by_string">
+    <title>
+      Create a nuclear reaction network from an input xml file and print the
+      forward and reverse rates for a particular reaction (chosen by its string)
+      at a variety of temperatures.
+    </title>
+    <execution>
+      <note>
+        Choose a particular reaction with a string. For example, try:
+      </note>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+        <item>"c12 + he4 -> o16 + gamma"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_forward_and_reverse_by_xpath">
+    <title>
+      Create a nuclear reaction network from an input xml file and print the
+      forward and reverse rates for a particular reaction or set of reactions
+      (chosen by an xpath expression) at a variety of temperatures.
+    </title>
+    <execution>
+      <note>
+        Choose a reaction or set of reactions with an xpath expression.
+        For example, try:
+      </note>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+        <item>"[reactant = 'ne21']"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="check_rates">
+    <title>
+      Create a nuclear reaction network from an input xml file and check
+      that the forward and reverse rates lie within lower and upper bounds
+      for a given temperature range.
+     </title>
+    <execution>
+      <note>
+        To find the forward and reverse rates (for the network in the input
+        file) that are less than 0 or greater than 1.e14 in the
+        temperature range 1.e-3 to 10 billion Kelvins, type:
+      </note>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+        <item>1.e-3</item>
+        <item>10.</item>
+        <item>0.</item>
+        <item>1.e14</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="double_rates">
+    <title>
+      Create a nuclear reaction network from an input xml file and print the
+      forward and reverse rates at the input temperature and then double the
+      rates and print them out again.
+     </title>
+    <execution>
+      <note>
+        To print and double the forward and reverse rates at t9 = 3, type:
+      </note>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+        <item>3.</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        You can also select out certain reactions with an xpath expression.
+        For example, try:
+      </note>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+        <item>3.</item>
+        <item>"[product = 'mg25']"</item>
+      </in>
+      <out>
+        <item type="file">output_xpath.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_screened_rates">
+    <title>
+      Create a nuclear reaction network from an input xml file and for rates
+      selected by an XPath expression, print out the forward and reverse rates,
+      the forward screening factor, the reverse ratio correction, and the
+      screened rates.
+     </title>
+    <execution>
+      <note>
+        To print the correction factor and screened rates for reactions
+        involving n15 as a reactant at t9 = 3, a mass density of 1.e8 g/cc,
+        an electron-to-baryon ratio of 0.5, and a second
+        moment of the abundances with respect to atomic number of 0.15, type:
+      </note>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+        <item>3.</item>
+        <item>1.e8</item>
+        <item>0.5</item>
+        <item>0.15</item>
+        <item>"[reactant = 'n15']"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="merge_full">
+    <title>
+      Merge a network xml file and an input mass fractions data xml file
+      into a single libnucnet input xml file.
+     </title>
+    <execution type="non_example">
+      <note>
+        One way to do this is to use xsltproc (which you should
+        have installed during the compilation tutorial).  To do so, type:
+      </note>
+      <command>xsltproc</command>
+      <in>
+        <item>&#45;&#45;stringparam</item>
+        <item>initial_mass_frac_doc</item>
+        <item>../data_pub/initial_mass_fractions_3d.xml</item>
+        <item>../xsl_pub/merge_full.xsl</item>
+        <item>../data_pub/example_net.xml</item>
+      </in>
+      <out>
+        <item type="file">../data_pub/example_3d.xml</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        You can alternatively use libnucnet routines.  For example,
+        type:
+      </note>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+        <item>../data_pub/initial_mass_fractions_single_zone.xml</item>
+        <item type="post arg">../data_pub/example_single_zone.xml</item>
+      </in>
+    </execution>
+    <execution>
+      <note>
+        You can use XPath.  For example, to include only nuclei up to Z = 24,
+        type:
+      </note>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+        <item>../data_pub/initial_mass_fractions_1d.xml</item>
+        <item>"[z &lt;= 24]"</item>
+        <item type="post arg">../data_pub/example_1d.xml</item>
+      </in>
+    </execution>
+    <execution>
+      <note>
+        You can also use XInclude with XPath.
+        For example, to include only nuclei up to Z = 24 from included
+        files, type:
+      </note>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+        <item>../data_pub/initial_mass_fractions_1d_include.xml</item>
+        <item>"[z &lt;= 24]"</item>
+        <item type="post arg">../data_pub/example_1d_include.xml</item>
+      </in>
+    </execution>
+  </example>
+
+  <example name="create_zones">
+    <title>
+      Create a full libnucnet nuclear reaction network structure
+      (nuclei plus reactions among them) from an input xml file 
+      print out data about the input zones, remove the zones, and add a zone.
+     </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_3d.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_zone_data">
+    <title>
+      Create a full libnucnet structure (network plus zones) and print out data
+      about the zones.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_3d.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_zone_mass_fractions_by_labels">
+    <title>
+      Create a full libnucnet structure (network plus zones) and print out
+      mass fractions for a zone chosen by its labels.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+        <item>../data_pub/initial_mass_fractions_3d.xml</item>
+        <item>x1</item>
+        <item>y1</item>
+        <item>z1</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_zone_abundances_by_nucleon_number">
+    <title>
+      Print out the abundances in a zone as a function of neutron number
+      (or atomic number "z" or mass number "a").
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+        <item>../data_pub/initial_mass_fractions_3d.xml</item>
+        <item>x1</item>
+        <item>y1</item>
+        <item>z1</item>
+        <item>"n"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_zone_quantum_abunds">
+    <title>
+      Create a full libnucnet structure (network plus zones) and print out
+      the quantum abundances and chemical potentials (in Maxwell-Boltzmann
+      statistics) at the input temperature and density
+      for a zone chosen by its labels.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+        <item>../data_pub/initial_mass_fractions_single_zone.xml</item>
+        <item>1</item>
+        <item>1.e5</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_nuclide_mass_fractions_in_zones">
+    <title>
+      Create a full libnucnet structure (network plus zones) and print out
+      mass fractions for a given species in all zones.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_nuc.xml</item>
+        <item>../data_pub/initial_mass_fractions_stooges.xml</item>
+        <item>he4</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_views">
+    <title>
+      Create network views of valid reactions of various types, store
+      them in a zone, and iterate the views in the zone to print out
+      the number of reactions in each view.
+     </title>
+    <execution>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="star_read">
+    <title>
+      Create a zone mass fractions file from a Rauscher et al. (2002) stellar
+      model data file.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/star_read_nuc.xml</item>
+        <item>../data_pub/star_data.txt</item>
+      </in>
+      <out>
+        <item type="arg">output.xml</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="extract_zone_nuclide_subset">
+    <title>
+      Extract a subset of zones containing a subset of nuclei from the original
+      zone xml file and dump to a new xml.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/star_read_nuc.xml</item>
+        <item>../data_pub/s25a28d_expl.xml</item>
+        <item>"[(@label1 &gt;= '214' and @label1 &lt;= '216') or @label1 = 'wind']"</item>
+        <item>"[ z &lt;= 30 ]"</item>
+      </in>
+      <out>
+        <item type="arg">output.xml</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+         More complicated xpath expressions are possible.  For example
+         to extract zones for which the the mass fraction of iron-60
+         is greater than 1.e-10 and include them in a file that includes
+         only species with z &lt; 30, type:
+      </note>
+      <in>
+        <item>../data_pub/star_read_nuc.xml</item>
+        <item>../data_pub/s25a28d_expl.xml</item>
+        <item>"[mass_fractions/nuclide[@name='fe60' and x > 1.e-10]]"</item>
+        <item>"[ z &lt;= 30 ]"</item>
+      </in>
+      <out>
+        <item type="arg">output_xpath2.xml</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="average_zones">
+    <title>
+      Average the abundances in the zones.
+    </title>
+    <execution>
+      <note>
+        To average the abundances in the zones by number (that is, by
+        fractional contribution from each zone), type:
+      </note>
+      <in>
+        <item>../data_pub/star_read_nuc.xml</item>
+        <item>../data_pub/s25a28d_expl.xml</item>
+        <item>../data_pub/average.txt</item>
+        <item>number</item>
+      </in>
+      <out>
+        <item type="arg">output.xml</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        It is also possible to average the abundances by zone mass (although for
+        the present data file, the results will be the same as by number
+        because all the zones have the same mass).  To average by mass, type:
+      </note>
+      <in>
+        <item>../data_pub/star_read_nuc.xml</item>
+        <item>../data_pub/s25a28d_expl.xml</item>
+        <item>../data_pub/average.txt</item>
+        <item>mass</item>
+      </in>
+      <out>
+        <item type="arg">output_mass.xml</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_zone_rates">
+    <title>
+      Create a full libnucnet structure (network plus zones) and print out the
+      the forward and reverse rates for the zone using detailed balance for
+      the reverse rates (or not).
+    </title>
+    <execution>
+      <note>
+        To print out the forward and reverse rates for the zone with
+        labels 0, 0, 0 at t9 = 6 and mass density = 1.e9 g/cc using
+        detailed balance, type:
+      </note>
+      <in>
+        <item>../data_pub/example_single_zone.xml</item>
+        <item>6.</item>
+        <item>1.e9</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>on</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        To the zone rates but without computing the reverse rates, type:
+      </note>
+      <in>
+        <item>../data_pub/example_single_zone.xml</item>
+        <item>6.</item>
+        <item>1.e9</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>off</item>
+      </in>
+      <out>
+        <item type="file">output_off.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_zone_screening">
+    <title>
+      Create a full libnucnet structure (network plus zones) and print out the
+      screening and correction factors for the reactions in a zone.
+    </title>
+    <execution>
+      <note>
+        To print out the screening and reverse ratio correction factors
+        for the zone with labels 0, 0, 0 at t9 = 1 and mass density = 1.e8 g/cc,
+        type:
+      </note>
+      <in>
+        <item>../data_pub/example_single_zone.xml</item>
+        <item>1.</item>
+        <item>1.e8</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_jacobian">
+    <title>
+      Create a full libnucnet structure (network plus zones) and generate
+      the Jacobian matrix.
+    </title>
+    <execution>
+      <note>
+        To print out the Jacobian matrix for the abundances in the zone
+        with labels 0, 0, 0 at t9 = 1 and mass density = 1000 g/cc, type:
+      </note>
+      <in>
+        <item>../data_pub/example_single_zone.xml</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1.</item>
+        <item>1.e3</item>
+      </in>
+      <out>
+        <item type="arg">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="run_single_zone">
+    <title>
+      Create a full libnucnet structure (network plus zones) and run a
+      single-zone network calculation for the input temperature, density,
+      and duration.
+    </title>
+    <execution>
+      <note>
+        Use a network of nuclei with Z &lt;= 10 to 
+        compute the evolution of the abundances of species with initial
+        abundances in the input file at an initial T9 = 10 and density of
+        1.e8 g/cc expanding with a density e-folding timescale of 0.1 seconds
+        for 10 seconds, printing out the abundances every 20 time steps:
+      </note>
+      <in>
+        <item>../data_pub/example_single_zone.xml</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>10.</item>
+        <item>1.e8</item>
+        <item>0.1</item>
+        <item>10.</item>
+        <item>20</item>
+        <item>"[z &lt;= 10]"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="run_switch_network">
+    <title>
+      Run a single-zone network calculation for the input temperature, density,
+      and duration but switch network to use only weak decays and neutron
+      capture below T9 = 0.1.
+    </title>
+    <execution>
+      <note>
+        Use a network of nuclei with Z &lt;= 10 to 
+        compute the evolution of the abundances of species with initial
+        abundances in the input file at an initial T9 = 10 and density of
+        1.e8 g/cc expanding with a density e-folding timescale of 0.1 seconds
+        for 10 seconds, printing out the abundances every 20 time steps and
+        switching to a network only using weak decays and neutron captures
+        below T9 = 0.1:
+      </note>
+      <in>
+        <item>../data_pub/example_single_zone.xml</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>10.</item>
+        <item>1.e8</item>
+        <item>0.1</item>
+        <item>10.</item>
+        <item>20</item>
+        <item>"[z &lt;= 10]"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="run_mod_rate_single_zone">
+    <title>
+      Create a full libnucnet structure (network plus zones) and run a
+      single-zone network calculation but with the forward and reverse
+      rates for a particular reaction at all temperatures multipled by
+      a constant factor.
+    </title>
+    <execution>
+      <note>
+        Use a network of nuclei with Z &lt;= 10 to
+        compute the evolution of the abundances of species with initial
+        abundances in the input file at an initial T9 = 10 and density of
+        1.e8 g/cc expanding with a density e-folding timescale of 0.1 seconds
+        for 10 seconds but with the forward and reverse rates for the reaction
+        he4 + he4 + he4 -> c12 + gamma increased by a factor of 10 at all
+        temperatures, printing out the abundances every 20 time steps:
+      </note>
+      <in>
+        <item>../data_pub/example_single_zone.xml</item>
+        <item>10.</item>
+        <item>1.e8</item>
+        <item>0.1</item>
+        <item>10.</item>
+        <item>20</item>
+        <item>"he4 + he4 + he4 -> c12 + gamma"</item>
+        <item>10</item>
+        <item>"[z &lt;= 10]"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="run_table_single_zone">
+    <title>
+      Create a full libnucnet structure (network plus zones) and run a
+      single-zone network calculation for the input temperature, density,
+      and initial mass fractions from text files.
+    </title>
+    <execution>
+      <note>
+        Use a network of nuclei with Z &lt;= 10 to
+        compute the evolution of the abundances of species with initial
+        abundances in an input file text file using a thermodynamics trajectory
+        from an input text file evolving for 30 seconds and
+        printing out the abundances every 20 time steps:
+      </note>
+      <in>
+        <item>../data_pub/example_net.xml</item>
+        <item>../data_pub/zone_ascii.txt</item>
+        <item>../data_pub/mass_fractions.txt</item>
+        <item>30.</item>
+        <item>20</item>
+        <item>"[z &lt;= 10]"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="run_multi_zone">
+    <title>
+      Create a full libnucnet structure (network plus zones) and run a
+      multi-zone network calculation for the input conditions.
+    </title>
+    <execution>
+      <note>
+        For a network of nuclei with Z &lt;= 10,
+        compute the evolution of the abundances of species in the three input
+        zones for a duration of 100 seconds with a mixing time between zones
+        of 0.01 seconds:
+      </note>
+      <in>
+        <item>../data_pub/example_1d.xml</item>
+        <item>0.01</item>
+        <item>100.</item>
+        <item>1</item>
+        <item>"[z &lt;= 10]"</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+       <note>
+         To run without mixing, use a mixing timescale of zero:
+       </note>
+      <in>
+        <item>../data_pub/example_1d.xml</item>
+        <item>0.</item>
+        <item>100.</item>
+        <item>1</item>
+        <item>"[z &lt;= 10]"</item>
+      </in>
+      <out>
+        <item type="file">no_mixing_output.txt</item>
+      </out>
+    </execution>
+    <execution>
+       <note>
+         To run with only mixing, use the mix_flag to
+         set all zone temperatures to zero:
+       </note>
+      <in>
+        <item>../data_pub/example_1d_include.xml</item>
+        <item>0.1</item>
+        <item>100.</item>
+        <item>0</item>
+        <item>"[z &lt;= 10]"</item>
+      </in>
+      <out>
+        <item type="file">mixing_only_output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  </example_class>
+
+</examples>

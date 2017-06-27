@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<!--////////////////////////////////////////////////////////////////////////////
+// <file type="public">
+//
+//   <license>
+//     See src/README.txt for this module for license and copyright
+//     information.
+//   </license>
+//
+//   <description>
+//     <abstract>
+//       xml file giving description and call sequence for examples codes.
+//     </abstract>
+//     <keywords>
+//       xml, example, code
+//     </keywords>
+//   </description>
+//
+//   <authors>
+//     <current>
+//       <author userid="mbradle" start_date="2008/06/16" />
+//     </current>
+//     <previous>
+//     </previous>
+//   </authors>
+//
+//   <compatibility>
+//     Tested in mozilla, firefox.
+//   </compatibility>
+//
+// </file>
+/////////////////////////////////////////////////////////////////////////////-->
+
+<examples>
+
+  <general_information>
+
+  <module>libstatmech</module>
+
+  <api_doc_files>
+
+    <file name="Libstatmech.h">
+      <structures>
+        <structure>Libstatmech__Fermion</structure>
+        <structure>Libstatmech__Boson</structure>
+      </structures>
+    </file>
+
+  </api_doc_files>
+
+  <other_files>
+    <file>README.txt</file>
+    <file>boson_ground_state_functions.c</file>
+    <file>boson_ground_state_functions.h</file>
+  </other_files>
+
+  <authors>
+    <author>
+      <name>mbradle</name>
+      <date>2008/06/14</date>
+    </author>
+  </authors>
+
+  <intro>
+    This tutorial demonstrates how to use the example codes in the
+    libstatmech distribution src/examples directory.
+  </intro>
+
+  </general_information>
+
+  <example_class name="Libstatmech">
+
+  <example name="create_fermion">
+    <title>
+       Create a fermion and print out its data.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">electron</item>
+        <item type="arg">0.511</item>
+        <item type="arg">2</item>
+        <item type="arg">-1</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="fermion_accuracy">
+    <title>
+       Compute the chemical potential for an increasing degree of accuracy.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">electron</item>
+        <item type="arg">0.511</item>
+        <item type="arg">2</item>
+        <item type="arg">-1</item>
+        <item type="arg">1.e6</item>
+        <item type="arg">1.e32</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="pressure_integrand">
+    <title>
+       Create a fermion and print out the pressure integrand as a function
+       of the dimensionless energy using the default integrand and a 
+       user-supplied one for the input temperature and mu/kT.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">electron</item>
+        <item type="arg">0.511</item>
+        <item type="arg">2</item>
+        <item type="arg">-1</item>
+        <item type="arg">1.e7</item>
+        <item type="arg">25.</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="thermodynamic">
+    <title>
+       Create a fermion gas and print out the thermodynamics quantities
+       using the default integrands and user-supplied ones for the
+       input temperature and number density.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">electron</item>
+        <item type="arg">0.511</item>
+        <item type="arg">2</item>
+        <item type="arg">-1</item>
+        <item type="arg">1.e7</item>
+        <item type="arg">1.e25</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="fermion_derivatives">
+    <title>
+       Create a fermion gas and print out the temperature derivatives of 
+       thermodynamics quantities as well as the heat capacity
+       using the default integrands for the input temperature and number
+       density.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">electron</item>
+        <item type="arg">0.511</item>
+        <item type="arg">2</item>
+        <item type="arg">-1</item>
+        <item type="arg">1.e7</item>
+        <item type="arg">1.e25</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="heat_capacity_vs_rho">
+    <title>
+      Compute the heat capacity of a fermion gas as a function of density.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">electron</item>
+        <item type="arg">0.511</item>
+        <item type="arg">2</item>
+        <item type="arg">-1</item>
+        <item type="arg">1.e7</item>
+        <item type="arg">0.5</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="thomas_fermi">
+    <title>
+       Compute the number density of electrons in a Yukawa potential.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">2000.</item>
+        <item type="arg">1</item>
+        <item type="arg">2.</item>
+        <item type="arg">1.</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="create_boson">
+    <title>
+       Create a boson and print out its data.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">boson</item>
+        <item type="arg">1.</item>
+        <item type="arg">3</item>
+        <item type="arg">-1</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="boson_function">
+    <title>
+       Create a boson gas and print out the thermodynamics quantities
+       using supplied functions for ground state properties and
+       the default integrands for the input temperature and number
+       density.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">boson</item>
+        <item type="arg">1.</item>
+        <item type="arg">3</item>
+        <item type="arg">-1</item>
+        <item type="arg">1.e7</item>
+        <item type="arg">1.e25</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="boson_derivatives">
+    <title>
+       Create a boson gas and print out the temperature derivatives of
+       thermodynamics quantities as well as the heat capacity
+       using the default integrands for the input temperature and number
+       density.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">boson</item>
+        <item type="arg">1.</item>
+        <item type="arg">3</item>
+        <item type="arg">-1</item>
+        <item type="arg">1.e7</item>
+        <item type="arg">1.e25</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="photons">
+    <title>
+       Create a photon gas and print out the thermodynamics quantities
+       using the default integrands and user-supplied ones for the
+       input temperature. 
+    </title>
+    <execution>
+      <in>
+        <item type="arg">1.e3</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="bec_n">
+    <title>
+       Create a boson gas and print out thermodynamic quantities
+       at a series of temperatures for the input number of particles
+       to show the Bose-Einstein condensate at low temperatures. 
+    </title>
+    <execution>
+      <in>
+        <item type="arg">boson</item>
+        <item type="arg">1.</item>
+        <item type="arg">3</item>
+        <item type="arg">-1</item>
+        <item type="arg">1.e25</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="bec_T">
+    <title>
+       Create a boson gas and print out thermodynamic quantities
+       at a series of number densities for the input temperature
+       to show the Bose-Einstein condensate at high number densities.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">boson</item>
+        <item type="arg">1.</item>
+        <item type="arg">3</item>
+        <item type="arg">-1</item>
+        <item type="arg">1.e7</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  </example_class>
+
+</examples>

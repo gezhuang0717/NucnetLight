@@ -1,0 +1,88 @@
+#///////////////////////////////////////////////////////////////////////////////
+# <file type="public">
+#
+#   <description>
+#     <abstract>
+#       Makefile for dealing with Sparskit2.  It is included from Makefile.
+#     </abstract>
+#   </description>
+#   <license>
+#     See the src/README.txt file in this distribution for copyright and license
+#     information.
+#   </license>
+#
+# </file>
+#///////////////////////////////////////////////////////////////////////////////
+
+SPARSKIT_URL = http://www-users.cs.umn.edu/~saad/software/SPARSKIT
+SPARSKIT_DATA = SPARSKIT2.tar
+
+AR= ar -rc
+
+CC+= -I $(SPARSESOLVEDIR)
+
+#===============================================================================
+# Sparskit
+#===============================================================================
+
+$(SPARSKITDIR)/../$(SPARSKIT_DATA).gz:
+	wget $(SPARSKIT_URL)/$(SPARSKIT_DATA).gz -O $@
+	tar xz -C $(SPARSKITDIR)/.. -f $@
+
+#===============================================================================
+# Build dependencies.
+#===============================================================================
+
+$(VENDORDIR)/wn_sparse_solve.tar.gz:
+	wget $(SPARSESOLVE_URL)/wn_sparse_solve_$(SPARSESOLVE_VERSION).tar.gz -O $@
+
+$(OBJDIR)/WnSparseSolve.o: $(VENDORDIR)/wn_sparse_solve.tar.gz $(OBJDIR)/WnMatrix.o
+	tar xz -C $(VENDORDIR) -f $<
+	$(CC) -c $(SPARSESOLVEDIR)/WnSparseSolve.c -o $@
+
+UNSUPP_SK2OBJ = $(OBJDIR)/blas1.o	       \
+                $(OBJDIR)/exppro.o	       \
+                $(OBJDIR)/itaux.o	       \
+                $(OBJDIR)/phipro.o	       \
+
+$(UNSUPP_SK2OBJ): $(OBJDIR)/%.o: $(SPARSESOLVEDIR)/%.f
+	$(FF) -c -o $@ $<
+
+SP_OBJ = $(OBJDIR)/WnSparseSolve.o		\
+	 $(UNSUPP_SK2OBJ)			\
+
+#===============================================================================
+# Sparskit objects
+#===============================================================================
+
+SK2OBJ = $(SPARSKITDIR)/BLASSM/blassm.o         \
+         $(SPARSKITDIR)/BLASSM/matvec.o         \
+         $(SPARSKITDIR)/FORMATS/formats.o       \
+         $(SPARSKITDIR)/FORMATS/unary.o         \
+         $(SPARSKITDIR)/INFO/infofun.o          \
+         $(SPARSKITDIR)/INOUT/inout.o           \
+         $(SPARSKITDIR)/ITSOL/ilut.o            \
+         $(SPARSKITDIR)/ITSOL/iters.o           \
+         $(SPARSKITDIR)/MATGEN/FDIF/genmat.o    \
+         $(SPARSKITDIR)/MATGEN/FEM/elmtlib2.o   \
+         $(SPARSKITDIR)/MATGEN/FEM/femgen.o     \
+         $(SPARSKITDIR)/MATGEN/FEM/meshes.o     \
+         $(SPARSKITDIR)/MATGEN/MISC/sobel.o     \
+         $(SPARSKITDIR)/MATGEN/MISC/zlatev.o    \
+         $(SPARSKITDIR)/ORDERINGS/ccn.o         \
+         $(SPARSKITDIR)/ORDERINGS/color.o       \
+         $(SPARSKITDIR)/ORDERINGS/dsepart.o
+
+$(SK2OBJ): %.o: %.f
+	$(FF) -c -o $@ $<
+
+libskit $(SPARSKITDIR)/libskit.a: $(SPARSKITDIR)/../$(SPARSKIT_DATA).gz $(SK2OBJ)
+	$(AR) $(SPARSKITDIR)/libskit.a $(SK2OBJ)
+
+sparse: libskit $(SP_OBJ)
+
+.PHONY: clean_lskit
+
+clean_lskit:
+	rm -f $(SK2OBJ)
+	rm -f $(SPARSKITDIR)/libskit.a

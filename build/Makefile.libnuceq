@@ -1,0 +1,103 @@
+#///////////////////////////////////////////////////////////////////////////////
+#  Copyright (c) 2011-2012 Clemson University.
+# 
+#  This file was originally written by Bradley S. Meyer.
+# 
+#  This is free software; you can redistribute it and/or modify it
+#  under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+# 
+#  This software is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+# 
+#  You should have received a copy of the GNU General Public License
+#  along with this software; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+#  USA
+# 
+#///////////////////////////////////////////////////////////////////////////////
+
+#///////////////////////////////////////////////////////////////////////////////
+#//!
+#//! \file Makefile.libnucnet
+#//! \brief A makefile to generate libnuceq examples.
+#//!
+#///////////////////////////////////////////////////////////////////////////////
+
+ifndef NUCNET_TARGET
+NUCNET_TARGET = ..
+endif
+
+BUILD_DIR = $(NUCNET_TARGET)/build
+
+VENDORDIR = ../vendor
+BINDIR = ../libnuceq
+OBJDIR = $(BINDIR)/obj
+
+XSL = http://nucnet-tools.sourceforge.net/xsl_pub/2012-07-17/examples.xsl
+
+#///////////////////////////////////////////////////////////////////////////////
+# End of lines to be edited.
+#///////////////////////////////////////////////////////////////////////////////
+
+#===============================================================================
+# OBJDIR is the temporary directory for codes compilation, this is where
+# object files are created.
+#===============================================================================
+
+OBJ_DIR := $(shell mkdir -p $(OBJDIR))
+
+BIN_DIR := $(shell mkdir -p $(BINDIR))
+
+include $(BUILD_DIR)/Makefile
+
+BUILD := $(shell \
+    if [ ! -f $(LIBNUCEQDIR)/../examples/examples.xml ]; \
+    then \
+      mkdir -p $(VENDORDIR); \
+      wget $(LIBNUCEQ_URL)/libnuceq_$(LIBNUCEQ_VERSION).tar.gz -O $(VENDORDIR)/libnuceq.tar.gz; \
+      tar xz -C $(VENDORDIR) -f $(VENDORDIR)/libnuceq.tar.gz; \
+    fi)
+
+#===============================================================================
+# Expand libnuceq example codes.
+#===============================================================================
+
+EXEC_LIBNUCEQ = $(shell xsltproc --stringparam codes examples $(XSL) $(LIBNUCEQDIR)/../examples/examples.xml)
+
+AUX_LIBNUCEQ = $(shell xsltproc --stringparam objdir $(OBJDIR) --stringparam codes aux $(XSL) $(LIBNUCEQDIR)/../examples/examples.xml)
+
+#===============================================================================
+# Executables.
+#===============================================================================
+
+$(AUX_LIBNUCEQ): $(OBJDIR)/%.o: $(LIBNUCEQDIR)/../examples/%.c
+	$(CC) -c -o $@ $<
+
+LIBNUCEQ_OBJS = $(WN_OBJ)       \
+                $(AUX_LIBNUCEQ) 
+
+$(EXEC_LIBNUCEQ): $(LIBNUCEQ_OBJS)
+	$(CC) $(LIBNUCEQ_OBJS) $(CLIBS) -o $(BINDIR)/$@ $(LIBNUCEQDIR)/../examples/$@.c
+
+all_libnuceq: $(EXEC_LIBNUCEQ)
+
+#===============================================================================
+# Get data.
+#===============================================================================
+
+DATA_VERSION=2011-10-10
+
+libnuceq_data:
+	mkdir -p ../data_pub
+	cp $(LIBNUCEQDIR)/../data_pub/* ../data_pub
+
+#===============================================================================
+# Clean up.
+#===============================================================================
+
+cleanall_libnuceq: clean_all
+	rm -fr $(BINDIR)

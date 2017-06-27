@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<vec:vector xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vec="http://www.webnucleo.org/home/modules/wn_matrix/0.7/xsd_pub/vector/" xsi:schemaLocation="http://www.webnucleo.org/home/modules/wn_matrix/0.7/xsd_pub/vector/ http://www.webnucleo.org/home/modules/wn_matrix/0.7/xsd_pub/vector.xsd">
+  <element>0</element>
+  <element>1</element>
+  <element>0</element>
+</vec:vector>

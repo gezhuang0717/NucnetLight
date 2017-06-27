@@ -1,0 +1,104 @@
+#///////////////////////////////////////////////////////////////////////////////
+#  Copyright (c) 2011-2012 Clemson University.
+# 
+#  This file was originally written by Bradley S. Meyer.
+# 
+#  This is free software; you can redistribute it and/or modify it
+#  under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+# 
+#  This software is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+# 
+#  You should have received a copy of the GNU General Public License
+#  along with this software; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+#  USA
+# 
+#///////////////////////////////////////////////////////////////////////////////
+
+#///////////////////////////////////////////////////////////////////////////////
+#//!
+#//! \file Makefile.libnucnet
+#//! \brief A makefile to generate libnucnet examples.
+#//!
+#///////////////////////////////////////////////////////////////////////////////
+
+ifndef NUCNET_TARGET
+NUCNET_TARGET = ..
+endif
+
+BUILD_DIR = $(NUCNET_TARGET)/build
+
+VENDORDIR = ../vendor
+BINDIR = ../libnucnet
+OBJDIR = $(BINDIR)/obj
+
+XSL = http://nucnet-tools.sourceforge.net/xsl_pub/2012-07-17/examples.xsl
+
+#///////////////////////////////////////////////////////////////////////////////
+# End of lines to be edited.
+#///////////////////////////////////////////////////////////////////////////////
+
+#===============================================================================
+# OBJDIR is the temporary directory for codes compilation, this is where
+# object files are created.
+#===============================================================================
+
+OBJ_DIR := $(shell mkdir -p $(OBJDIR))
+
+BIN_DIR := $(shell mkdir -p $(BINDIR))
+
+include $(BUILD_DIR)/Makefile
+
+BUILD := $(shell \
+    if [ ! -f $(LIBNUCNETDIR)/../examples/examples.xml ]; \
+    then \
+      mkdir -p $(VENDORDIR); \
+      wget $(LIBNUCNET_URL)/libnucnet_$(LIBNUCNET_VERSION).tar.gz -O $(VENDORDIR)/libnucnet.tar.gz; \
+      tar xz -C $(VENDORDIR) -f $(VENDORDIR)/libnucnet.tar.gz; \
+    fi)
+
+#===============================================================================
+# Expand libnucnet example codes.
+#===============================================================================
+
+EXEC_LIBNUCNET = $(shell xsltproc --stringparam codes examples $(XSL) $(LIBNUCNETDIR)/../examples/examples.xml)
+
+AUX_LIBNUCNET = $(shell xsltproc --stringparam objdir $(OBJDIR) --stringparam codes aux $(XSL) $(LIBNUCNETDIR)/../examples/examples.xml)
+
+#===============================================================================
+# Executables.
+#===============================================================================
+
+$(AUX_LIBNUCNET): $(OBJDIR)/%.o: $(LIBNUCNETDIR)/../examples/%.c
+	$(CC) -c -o $@ $<
+
+LIBNUCNET_OBJS = $(WN_OBJ) \
+                 $(AUX_LIBNUCNET) 
+
+$(EXEC_LIBNUCNET): $(LIBNUCNET_OBJS)
+	$(CC) $(LIBNUCNET_OBJS) $(CLIBS) -o $(BINDIR)/$@ $(LIBNUCNETDIR)/../examples/$@.c
+
+all_libnucnet: $(EXEC_LIBNUCNET)
+
+#===============================================================================
+# Get data.
+#===============================================================================
+
+DATA_VERSION=2014-12-11
+
+libnucnet_data:
+	mkdir -p ../data_pub
+	wget http://libnucnet.sourceforge.net/data_pub/$(DATA_VERSION)/data.tar.gz -O ../data_pub/data.tar.gz
+	tar xz -C ../data_pub -f ../data_pub/data.tar.gz
+
+#===============================================================================
+# Clean up.
+#===============================================================================
+
+cleanall_libnucnet: clean_all
+	rm -fr $(BINDIR)

@@ -1,0 +1,21 @@
+void makeP0n(TString infile,TString outfile, Int_t isUpdate){
+  ifstream f(infile);
+  TString name="mo03u";
+  ofstream of;
+  if (isUpdate==1) of.open(outfile,ofstream::out | ofstream::app);
+  else of.open(outfile);
+  Int_t num;
+  f>>num;
+  TString temp;
+  for (Int_t i=0;i<num;i++){
+    of<<"single_rate\n"<<name<<"1\n";
+    f>>temp;
+    of<<temp;
+    f>>temp;
+    of<<"3\n";
+    for (Int_t j=0;j<4;j++){
+      f>>temp;
+      of<<temp<<endl;
+    }
+  }
+}

@@ -1,0 +1,501 @@
+%///////////////////////////////////////////////////////////////////////////////
+% <file type="public">
+%
+% <license>
+%   See the src/README.txt file for this module for copyright and license
+%   information.
+% </license>
+%   <description>
+%     <abstract>
+%       This is the Webnucleo Report describing the computational details
+%       behind the libnuceq module.
+%     </abstract>
+%     <keywords>
+%       libnuceq, report
+%     </keywords>
+%   </description>
+%
+%   <authors>
+%     <current>
+%       <author userid="mbradle" start_date="2010/12/08" />
+%     </current>
+%     <previous>
+%     </previous>
+%   </authors>
+%
+%   <compatibility>
+%     TeX (Web2C 7.4.5) 3.14159 kpathsea version 3.4.5
+%   </compatibility>
+%
+% </file>
+%///////////////////////////////////////////////////////////////////////////////
+%
+% This is a sample LaTeX input file.  (Version of 9 April 1986)
+%
+% A '%' character causes TeX to ignore all remaining text on the line,
+% and is used for comments like this one.
+
+\documentclass{article}    % Specifies the document style.
+
+\usepackage[dvips]{graphicx}
+\usepackage{hyperref}
+
+\newcommand{\apj}{ApJ}
+
+                           % The preamble begins here.
+\title{Webnucleo Technical Report: Computational Details Behind libnuceq}  % Declares the document's title.
+
+\author{Bradley S. Meyer, Tianhong Yu}
+
+\begin{document}           % End of preamble and beginning of text.
+
+\maketitle                 % Produces the title.
+
+
+This technical report describes some details of calculations in the
+libnuceq module.
+
+\section{Introduction}
+
+libnuceq is a library of C codes for computing nuclear statistical
+equilibria relevant to nucleosynthesis.
+It is built on top of libxml, the GNOME C xml toolkit, gsl,
+the GNU Scientific library, and the Webnucleo.org modules wn\_matrix, libnucnet,
+and libstatmech.
+Users can compute abundances in arbitrary statistical equilibria, which
+are specified by an XPath expression.
+A well-documented API allows users to incorporate libnuceq into their
+own codes, and examples in the libnuceq distribution demonstrate the API.
+
+\section{Abundances}
+
+The starting point for libnuceq calculations is the definition of $Y_i$, the
+abundance per nucleon of nuclear species $i$.  This is defined as
+\begin{equation}
+Y_i = \frac{n_i}{\rho N_A}
+\label{eq:yi}
+\end{equation}
+where $n_i$ is the number density of species $i$, $\rho$ is the mass density,
+and $N_A$ is Avogadro's number.  We relate this to the chemical potential
+of species $i$ (less its rest mass energy) by
+\begin{equation}
+Y_i = Y_{Qi} \exp\left\{\frac{\mu_i'}{kT} + f_{corr,i}\right\}.
+\label{eq:yi_chem}
+\end{equation}
+In Eq. (\ref{eq:yi_chem}), $\mu_i'$ is the chemical potential of species
+$i$ less the rest mass energy, $k$ is Boltzmann's constant, $T$ is the
+temperature, and $f_{corr,i}$, a term that allows for deviations of the
+abundance from this expression.
+$Y_{Qi}$ is the quantum abundance per nucleon of species $i$.  It is the
+abundance of species $i$ per nucleon that would obtain if there were one
+particle of species $i$ in a cube with side equal to the thermal de Broglie
+wavelength of species $i$.
+
+In arbitrary nuclear statistical equilibria, there is a relation between
+$\mu_i$, the chemical potential of species
+$i$ and that of the neutrons $\mu_n$ and protons $\mu_p$:
+\begin{equation}
+\mu_i = \Lambda_i + Z_i \mu_p + \left( A_i - Z_i \right )\mu_n
+\label{eq:nse}
+\end{equation}
+where $\Lambda_i$ is a quantity or function we call the {\em prefactor},
+$Z_i$ is the atomic number of species $i$ and $A_i$ is its mass
+number.  From Eqs. (\ref{eq:yi_chem}) and (\ref{eq:nse}), we find
+\[
+Y_i =
+\]
+\begin{equation}
+ Y_{Qi} \exp\left\{\Lambda_i + Z_i \frac{\mu_p'}{kT} + \right(A_i - Z_i\left)
+\frac{\mu_n'}{kT}
++ \frac{B_i}{kT} - \left( Z_i f_{corr,p} + \left( A_i - Z_i \right) f_{corr,n} -
+f_{corr,i} \right)\right\}.
+\label{eq:yi_final}
+\end{equation}
+In this equation, the binding energy $B_i$ is
+\begin{equation}
+B_i = Z_i m_pc^2 + \left( A_i - Z_i \right) m_nc^2 - m_ic^2,
+\label{eq:binding}
+\end{equation}
+where $m_pc^2$, $m_nc^2$, and $m_ic^2$ are the rest mass energies of the
+proton, neutron, and species $i$, respectively.
+
+\section{Calculation of the Equilibria}
+
+To solve for equilibria, we must satisfy certain abundance constraints.
+The first, and the one always relevant under conditions in which
+the nucleon rest mass energy is much greater than $kT$, is that nucleon
+number is conserved:
+\begin{equation}
+\sum_i A_i Y_i = 1
+\label{eq:a_i_y_i}
+\end{equation}
+where the sum runs on all nuclear species.  The remaining constraints
+depend on the particular equilibrium considered.
+
+\begin{enumerate}
+
+\item \label{sec:wse}
+The least constrained equilibrium is weak nuclear statistical equilibrium (WSE).
+Here $\Lambda_i = 0$ and, if we assume zero chemical potential for all
+neutrinos,
+\begin{equation}
+\mu_p + \mu_e = \mu_n
+\label{eq:weak}
+\end{equation}
+This allows us to write
+\begin{equation}
+\mu_e' = \mu_n' - \mu_p' + \left( m_nc^2 - m_pc^2 - m_ec^2 \right)
+\label{eq:mue'}
+\end{equation}
+Since we generally use atomic rather than nuclear masses, this becomes,
+upon neglect of the binding energy of the electron in the H atom,
+\begin{equation}
+\frac{\mu_e'}{kT} =
+\frac{\mu_n'}{kT} - \frac{\mu_p'}{kT} +
+\frac{\left( m_nc^2 - m_{^1{\rm H}}c^2\right)}{kT}
+\label{eq:muekT}
+\end{equation}
+
+The additional constraint on WSE is that the abundances must satisfy
+charge neutrality:
+\begin{equation}
+\sum_i Z_i Y_i = Y_e
+\label{eq:ye}
+\end{equation}
+where $Y_e$ is the net number of electrons per nucleon and the sum again
+runs over nuclear species.  We note that for WSE,
+$Y_e$ is not fixed; rather, it is a function of $T$ and $\mu_e / kT$.
+The consequence is that we must simultaneously find the roots $\mu_n/kT$ and
+$\mu_p/kT$ of the equations
+\begin{equation}
+f_1 = \sum_i A_i Y_i - 1
+\label{eq:f1}
+\end{equation}
+and
+\begin{equation}
+f_2 = \sum_i Z_i Y_i - Y_e
+\label{eq:f2}
+\end{equation}
+where the abundances are computed from Eq. (\ref{eq:yi_final}) with
+$\Lambda_i = 0$ and $Y_e$ is computed from the electron chemical potential
+in Eq. (\ref{eq:muekT}).
+
+To solve Eqs. (\ref{eq:f1}) and (\ref{eq:f2}) with libnuceq, one first
+creates an equilibrium with Libnuceq\_\_new().  The input to this routine
+is a Libnucnet\_\_Nuc structure, which contains the relevant nuclear data.
+Libnuceq\_\_new() returns a pointer to an equilibrium structure.
+To solve for the WSE at a particular temperature and density, one calls
+Libnuceq\_\_computeEquilibrium(), which takes as input the pointer to
+the equilibrium and the temperature and density at which to compute the
+abundances.
+
+libnuceq solves Eqs. (\ref{eq:f1}) and (\ref{eq:f2}) as nested
+one-dimensional root problems using the Brent solver gsl\_root\_fsolver\_brent
+in the GNU Scientific Library.  We choose nested 1-d roots because it is
+possible to bracket the roots and thus guarantee a solution.  Two-d methods
+are faster but require a good initial guess.  We have opted for robustness
+over speed.  Once the equilibrium has been found, the user may access the
+results using API routines to get abundances for species or chemical
+potentials for neutrons, protons, or electrons.
+
+The default routine to compute $Y_e$ from $\mu_e'/kT$ is that for fully
+relativistic, non-interacting electrons.  Should the user wish to employ
+a different equation of state for the electrons, he or she can do so by
+writing a Libstatmech\_\_Fermion\_\_Function and/or a
+Libstatmech\_\_Fermion\_\_Integrand for the electron number density.
+Once these are written,
+the user then sets them with
+Libnuceq\_\_updateUserElectronNumberDensity(), which has the
+prototype
+\begin{verbatim}
+Libnuceq__updateUserElectronNumberDensity(
+  Libnuceq *self,
+  Libstatmech__Fermion__Function my_function,
+  Libstatmech__Fermion__Integrand my_integrand,
+  void *p_function_data,
+  void *p_integrand_data
+);
+\end{verbatim}
+Here $self$ is a pointer to the equilibrium that will use
+the number density function
+my\_function and the number density integrand
+my\_integrand.  p\_function\_data and
+p\_integrand\_data are pointers to user-defined extra data for the
+function and the integrand.  The default calculation for the electron
+number density is that for default libstatmech calculations
+(non-interacting fully relativistic electrons).  If either the function
+or integrand is set, it will be used in place of the default.
+To restore the default, the user simply calls
+Libnuceq\_\_updateUserElectronNumberDensity() with NULL for the
+function, integrand, and data.
+
+\item\label{sec:nse}
+The next equilibrium is regular nuclear statistical equilibrium (NSE).
+Here we assume weak reactions are slow so that the electron fraction does
+not vary.  To compute NSE, then, one again solves Eqs. (\ref{eq:f1}) and
+(\ref{eq:f2}) but for specified $Y_e$.  In libnuceq, one does this by
+calling Libnuceq\_\_setYe() before computing the equilibrium.  This
+routine takes as input the pointer to the equilibrium and the value of
+the particular $Y_e$ at which to compute the NSE.  libnuceq then uses
+the user-specified value of $Y_e$ in Eq. (\ref{eq:f2}).  To clear the
+$Y_e$ constraint (and thereby restore the equilibrium to a WSE), one
+calls the routine Libnuceq\_\_clearYe().  After the equilibrium has
+been computed, the user may call API routines to get abundances and
+chemical potentials.
+
+\item\label{sec:qse}
+A quasi-statistical equilibrium (QSE) is one for which there is an extra
+constraint on some subset of nuclei.  The most common QSE occurs when
+the number of heavy nuclei becomes a fixed number because the three-body
+reactions that assemble them from $^4$He nuclei become slow
+(e.g., \cite{1998ApJ...498..808M}).  The chemical potential for heavy
+nuclei thus have a uniform shift from their usual NSE relation such that
+$\Lambda_i = \mu_h / kT$ for all heavy nuclei $i$, where $\mu_h$ is
+a chemical potential for the heavy nuclei as a whole.
+
+To compute a QSE with libnuceq, one defines the relevant ``cluster'', that
+is, the subset of nuclei with the same $\mu_h$.  These nuclei are in
+equilibrium under the exchange of neutrons and protons.  To create
+equilibrium cluster, the user first creates an equilibrium as in
+\S \ref{sec:wse} and \ref{sec:nse}
+and then creates a cluster with the routine
+Libnuceq\_\_newCluster(), which has the prototype
+\begin{verbatim}
+Libnuceq__Cluster *
+Libnuceq__newCluster(
+  Libnuceq *self,
+  const char *s_cluster_xpath
+);
+\end{verbatim}
+Here $self$ is the equilibrium that will include the cluster and
+s\_cluster\_xpath is an XPath expression that defines the cluster using
+Libnucnet\_\_Nuc variables.  For example, one could define the QSE cluster
+of all heavy nuclei to be carbon isotopes and above; thus, one could include
+this cluster in the equilibrium pointed to by $p\_my\_equilibrium$ by
+calling
+\begin{verbatim}
+p_cluster =
+  Libnuceq__newCluster(
+    p_my_equilibrium,
+    "[z >= 6]"
+  );
+\end{verbatim}
+This routine creates the cluster within $p\_my\_equilibrium$ and returns
+a pointer to it.  The pointer to the cluster may subsequently be retrieved
+by calling Libnuceq\_\_getCluster(), which gets the cluster by the
+defining XPath expression.  For example, one would retrieve the heavy nuclei
+cluster above by calling:
+\begin{verbatim}
+p_cluster =
+  Libnuceq__getCluster(
+    p_my_equilibrium,
+    "[z >= 6]"
+  );
+\end{verbatim}
+
+Once a cluster is defined, the user then sets the constraint on the
+function by calling Libnuceq\_\_Cluster\_\_updateConstraint().  The
+default constraint on a cluster is that the abundances of species
+within the cluster sum up to a particular value.  Thus, for example,
+if the sum of heavy nuclei is $Y_h = 0.01$, one would call
+\begin{verbatim}
+Libnuceq__Cluster__updateConstraint( p_cluster, 0.01 );
+\end{verbatim}
+When we solve for the equilibrium, libnuceq will simultaneously solve
+Eqs. (\ref{eq:f1}), (\ref{eq:f2}), and
+\begin{equation}
+f_3 = \sum_{i\in C} Y_i - Y_h
+\label{eq:f3}
+\end{equation}
+for the roots $\mu_n'/kT$, $\mu_p'/kT$ and $\mu_h/kT$.  In Eq. (\ref{eq:f3})
+the sum extends only over species contained in cluster $C$. Again, once the
+equilibrium has been computed abundances and chemical potentials, including
+the chemical potential of the cluster, may be retrieved with API routines.
+
+It is possible to define multiple clusters--one simply calls
+Libnuceq\_\_newCluster() for each cluster and sets the constraint on each.
+It is important to note that clusters should not overlap, that is, a
+species should not belong to more than one cluster.  Also, clusters should
+not include neutrons and protons.
+
+As of version 0.5, it is possible to copy clusters from one equilibrium
+to another if they share the same parent nuclide collection.  This is
+advantageous, for example, if one wants to compare two equilibria.
+The API routine that does this is Libnuceq\_\_copy\_clusters().  While one
+can simply create new clusters in the second equilibrium, this can
+be computationally expensive due to XPath evaluations.
+It is thus convenient to be able simply to copy over already
+existing clusters from the first equilibrium. 
+
+\item\label{sec:rnse}
+A restricted NSE is one for which the NSE extends only over a subset of nuclei.
+The cluster (subset) $C$
+that does not include the neutrons and protons, then, has
+a $\Lambda_i = A_i \mu_r / kT$ and a cluster constraint equation
+\begin{equation}
+f_3 = \sum_{i\in C} A_i Y_i - X_r
+\label{eq:f3_r}
+\end{equation}
+where $X_r$ is the mass fraction of species contained within $C$.
+Here both the prefactor $\Lambda_i$ and the constraint function
+Eq. (\ref{eq:f3_r}) differ from the defaults.  To specify a different
+prefactor, the user writes a Libnuceq\_\_Cluster\_\_prefactorFunction,
+which has the prototype
+\begin{verbatim}
+double
+my_prefactor_function(
+  Libnuceq__Cluster *p_cluster,
+  Libnuceq__Species *p_species,
+  void *p_my_prefactor_data
+);
+\end{verbatim}
+where {\em p\_cluster} is the cluster to which the prefactor function is
+applied, {p\_species} is the particular nuclear species $i$, and
+$p\_my\_prefactor\_data$
+is a pointer to user-defined extra data to the function.  The user can
+then write a Libnuceq\_\_Cluster\_\_constraint\_function,
+which has the prototype
+\begin{verbatim}
+double
+my_constraint_function(
+  Libnuceq__Species *p_species,
+  void *p_my_constraint_data
+);
+\end{verbatim}
+The names my\_prefactor\_function and my\_constraint\_function
+are for illustration--the user may choose different names that make
+sense to him or her.
+
+Once the prefactor and constraint functions are written, the user then
+sets them for an equilibrium with the API routines
+Libnuceq\_\_Cluster\_\_updatePrefactorFunction()
+and
+Libnuceq\_\_Cluster\_\_updateConstraintFunction().  For the examples above,
+the calls would be, for a cluster $p\_my\_cluster$,
+\begin{verbatim}
+Libnuceq__Cluster__updatePrefactorFunction(
+  p_my_cluster,
+  Libnuceq__Cluster__prefactorFunction my_prefactor_function,
+  p_my_prefactor_data
+);
+\end{verbatim}
+and
+\begin{verbatim}
+Libnuceq__Cluster__updateConstraintFunction(
+  p_my_cluster,
+  Libnuceq__Cluster__constraint_function my_constraint_function,
+  p_my_constraint_data
+);
+\end{verbatim}
+Now when the equilibrium is computed, libnuceq calculates the prefactor
+and constraint from the user's functions.
+
+\end{enumerate}
+
+Examples in the libnuceq distribution illustrate how to compute equilibria
+and to set constraints.
+
+\section{Setting Correction Factors}
+
+libnuceq allows users to correct abundances for deviations ($f_{corr,i}$)
+away from the simple relation that $Y_i = Y_{Qi}\exp(\mu'/kT)$.
+The correction is computed by a user-defined
+Libnucnet\_\_Species\_\_nseCorrectionFactorFunction.  The prototype
+for this function is (see libnucnet documentation for further details)
+\begin{verbatim}
+double
+my_corr_function(
+  Libnucnet__Species *p_species,
+  double d_t9,
+  double d_rho,
+  double d_ye,
+  void *p_nse_corr_data
+);
+\end{verbatim}
+Here {\em d\_t9} is the temperature in $10^9$ K, {\em d\_rho}
+is the mass density
+in g/cc, {\em d\_ye} is the electron fraction $Y_e$, and
+{\em p\_nse\_corr\_data}
+is a pointer to user-defined extra data for the function.  The user
+writes this function and then sets it for a particular equilibrium with
+Libnuceq\_\_setNseCorrectionFactorFunction(), which has the prototype
+\begin{verbatim}
+void
+Libnuceq__setNseCorrectionFactorFunction(
+  Libnuceq *p_my_equilibrium,
+  Libnucnet__Species__nseCorrectionFactorFunction my_corr_function,
+  void *p_nse_corr_data
+);
+\end{verbatim}
+Now when libnuceq computes the equilibrium, it will compute $f_{corr,i}$
+for each species from the user's correction factor function (in the
+above example, my\_corr\_function).  Note that libnuceq will call
+the correction factor function with the temperature and density set
+by the user in calling Libnuceq\_\_computeEquilibrium() and the
+current $Y_e$ for the equilibrium (whether set by the user with
+Libnuceq\_\_setYe() or computed from $\mu_e'/kT$).  To restore the default
+(no correction factor function), the user calls
+Libnuceq\_\_clearNseCorrectionFactorFunction().  Examples in the
+libnuceq distribution illustrate how to do this.
+
+\section{Setting Weak Statistical Equilibrium Correction Factors}
+
+As of version 0.3 of libnuceq, it is possible to add a correction to the
+relation among neutrons, protons, and electrons in WSE.
+Here Eq. (\ref{eq:weak}) is modified to read
+\begin{equation}
+\frac{\mu_p}{kT} + \frac{\mu_e}{kT} = \frac{\mu_n}{kT} + f_{wse,corr}.
+\label{eq:weak_modified}
+\end{equation}
+$f_{wse,corr}$ is the WSE correction function.  For example, if the
+electron neutrino chemical potential is non zero, then
+\begin{equation}
+f_{wse,corr} = \frac{\mu_{\nu_e}}{kT}
+\label{eq:mu_nue}
+\end{equation}
+
+To add a correction, the user writes a routine with the prototype
+\begin{verbatim}
+double
+my_wse_correction_function(
+  Libnuceq * p_my_equilibrium,
+  void * p_my_wse_corr_data
+);
+\end{verbatim}
+Here $p\_my\_equilibrium$ is a pointer to the equilibrium to which the
+WSE correction will be applied and $p\_my\_data$ is a pointer to a
+user-supplied data structure containing extra data for the correction
+function.  The user's routine must compute the correction $f_{wse,corr}$
+for the supplied input.
+
+Once the user has written such a correction function, the user applies
+it to an equilibrium with the libnuceq API routine
+Libnuceq\_\_updateWseCorrectionFunction(), which has the prototype
+\begin{verbatim}
+void
+Libnuceq__updateWseCorrectionFunction(
+  Libnuceq * p_my_equilibrium,
+  Libnuceq__wseCorrectionFunction my_wse_correction_function,
+  void * p_my_wse_corr_data
+);
+\end{verbatim}
+The calculation of the WSE for $p\_my\_equilibrium$ will then use
+$my\_wse\_correction\_function$ with $p\_my\_wse\_corr\_data$.  To
+clear the WSE correction function for an equilibrium, the user calls
+$Libnuceq\_\_updateWseCorrectionFunction()$ with the both
+the correction function and user data set to NULL.
+
+Documentation and examples in the libnuceq distribution provide further
+details.
+
+\begin{thebibliography}{1}
+
+\bibitem{1998ApJ...498..808M}
+{\sc B.~S. {Meyer}, T.~D. {Krishnan}, and D.~D. {Clayton}}, {\em Theory of
+  quasi-equilibrium nucleosynthesis and applications to matter expanding from
+  high temperature and density}, \apj, 498 (1998), pp.~808--830.
+
+\end{thebibliography}
+
+
+\end{document}

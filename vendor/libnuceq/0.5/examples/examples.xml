@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<!--////////////////////////////////////////////////////////////////////////////
+// <file type="public">
+//
+//   <license>
+//     See src/README.txt for this module for license and copyright
+//     information.
+//   </license>
+//
+//   <description>
+//     <abstract>
+//       xml file giving description and call sequence for examples codes.
+//     </abstract>
+//     <keywords>
+//       xml, example, code
+//     </keywords>
+//   </description>
+//
+//   <authors>
+//     <current>
+//       <author userid="mbradle" start_date="2010/03/14" />
+//     </current>
+//     <previous>
+//     </previous>
+//   </authors>
+//
+//   <compatibility>
+//     Tested in mozilla, firefox.
+//   </compatibility>
+//
+// </file>
+/////////////////////////////////////////////////////////////////////////////-->
+
+<examples>
+
+  <general_information>
+
+  <module>libnuceq</module>
+
+  <api_doc_files>
+
+    <file name="Libnuceq.h">
+      <structures>
+        <structure>Libnuceq</structure>
+        <structure>Libnuceq__Cluster</structure>
+        <structure>Libnuceq__Species</structure>
+      </structures>
+    </file>
+
+  </api_doc_files>
+
+  <other_files>
+    <file>coul_corr.c</file>
+    <file>coul_corr.h</file>
+    <file>README.txt</file>
+  </other_files>
+
+  <authors>
+    <author>
+      <name>mbradle</name>
+      <date>2010/03/14</date>
+    </author>
+  </authors>
+
+  <intro>
+    This tutorial demonstrates how to use the example codes in the
+    libnuceq distribution src/examples directory.
+  </intro>
+
+  </general_information>
+
+  <example_class name="Libnuceq">
+
+  <example name="compute_wse">
+    <title>
+       Calculate a weak statistical equilibrium at a fixed neutrino
+       chemical potential.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/example_nuc.xml</item>
+        <item type="arg">4.</item>
+        <item type="arg">1.e9</item>
+        <item type="arg">0.</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="compute_wse_from_lepton_number">
+    <title>
+       Calculate a weak statistical equilibrium at a fixed net lepton
+       number per nucleon.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/example_nuc.xml</item>
+        <item type="arg">4.</item>
+        <item type="arg">1.e10</item>
+        <item type="arg">1.</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="compute_function_integrand_wse">
+    <title>
+       Calculate a weak statistical equilibrium with a user-defined
+       electron number density function and integrand.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/example_nuc.xml</item>
+        <item type="arg">5.</item>
+        <item type="arg">1.e8</item>
+        <item type="arg">0.</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        To shift the electron chemical potential by a constant amount
+        in the electron number density integrand, enter a non zero value:
+      </note>
+      <in>
+        <item type="arg">../data_pub/example_nuc.xml</item>
+        <item type="arg">5.</item>
+        <item type="arg">1.e8</item>
+        <item type="arg">-3.</item>
+      </in>
+      <out>
+        <item type="file">output_shifted.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="compare_wse_screening">
+    <title>
+       Compare weak statistical equilibria calculated with and without
+       screening.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/example_nuc.xml</item>
+        <item type="arg">1.</item>
+        <item type="arg">1.e13</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="compute_nse">
+    <title>
+       Calculate a nuclear statistical equilibrium.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/example_nuc.xml</item>
+        <item type="arg">5.</item>
+        <item type="arg">1.e8</item>
+        <item type="arg">0.48</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="compute_screened_degen_nse">
+    <title>
+       Calculate a nuclear statistical equilibrium and compare to one
+       with screening and with degenerate nucleons.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/example_nuc.xml</item>
+        <item type="arg">1.</item>
+        <item type="arg">3.e12</item>
+        <item type="arg">0.2</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="compute_qse">
+    <title>
+       Calculate a quasi-statistical equilibrium.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/example_nuc.xml</item>
+        <item type="arg">5.</item>
+        <item type="arg">1.e8</item>
+        <item type="arg">0.48</item>
+        <item type="arg">0.01</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="compute_many_qse">
+    <title>
+       Calculate a quasi-statistical equilibrium with multiple clusters.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/example_nuc.xml</item>
+        <item type="arg">5.</item>
+        <item type="arg">1.e8</item>
+        <item type="arg">0.48</item>
+        <item type="arg">"[z &gt;=6 and z &lt; 22]"</item>
+        <item type="arg">0.01</item>
+        <item type="arg">"[z &gt;= 22]"</item>
+        <item type="arg">0.01</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="compare_qse">
+    <title>
+       Compare two quasi-equilibria with different abundance constraints.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/example_nuc.xml</item>
+        <item type="arg">5.</item>
+        <item type="arg">1.e8</item>
+        <item type="arg">0.48</item>
+        <item type="arg">0.01</item>
+        <item type="arg">0.02</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="compute_ng">
+    <title>
+       Calculate an (n,gamma)-(gamma,n) equilibrium.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/example_nuc.xml</item>
+        <item type="arg">../data_pub/z.txt</item>
+        <item type="arg">1.</item>
+        <item type="arg">1.e4</item>
+        <item type="arg">0.4</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="compute_rnse">
+    <title>
+       Calculate a restricted nuclear statistical equilibrium.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">../data_pub/example_nuc.xml</item>
+        <item type="arg">2.</item>
+        <item type="arg">1.e2</item>
+        <item type="arg">0.85</item>
+        <item type="arg">0.01</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  </example_class>
+
+</examples>

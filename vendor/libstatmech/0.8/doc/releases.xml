@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--////////////////////////////////////////////////////////////////////////////
+// <file type="public">
+//
+//   <license>
+//     Please see the src/README.txt in this distribution for more copyright
+//     and license information.
+//   </license>
+//
+//   <description>
+//     <abstract>
+//       xml file giving the release log
+//     </abstract>
+//     <keywords>
+//       xml, example, releases
+//     </keywords>
+//   </description>
+//
+//   <authors>
+//     <current>
+//       <author userid="mbradle" start_date="2011/05/05" />
+//     </current>
+//     <previous>
+//     </previous>
+//   </authors>
+//
+//   <compatibility>
+//     Tested in mozilla, firefox.
+//   </compatibility>
+//
+// </file>
+/////////////////////////////////////////////////////////////////////////////-->
+
+<release_log>
+
+  <release
+    name = "0.8"
+    date = "2012/09/11"
+  >
+    <new>
+      <item>
+        The sourceforge web site for this project now uses Allura.
+      </item>
+    </new>
+    <fix>
+      <item>
+        The code now uses extern "C" for C++ compilers.
+      </item>
+    </fix>
+  </release>
+
+  <release
+    name = "0.7"
+    date = "2012/09/01"
+  >
+    <new>
+      <item>
+        The API now includes default integrands to compute the internal energy
+        density (which differs from the default energy density in that it does
+        not include the rest mass).
+      </item>
+    </new>
+    <fix>
+      <item>
+        Some typos were fixed.
+      </item>
+      <item>
+        The check on looked up quantity in computation of integrand value was
+        improved (fixes 3520123).
+      </item>
+    </fix>
+  </release>
+
+  <release
+    name = "0.6"
+    date = "2012/02/01"
+  >
+    <new>
+      <item>
+        The API now includes routines to set the upper limit for quantity
+        integrals.
+      </item>
+      <item>
+        The API now includes routines to copy a fermion or a boson.
+      </item>
+    </new>
+    <fix>
+      <item>
+        Default boson integrals now correctly return zero when rest mass and
+        integration variable are both zero.
+      </item>
+      <item>
+        The examples Makefile has been cleaned up.
+      </item>
+      <item>
+        The Thomas-Fermi example has been cleaned up and made more compliant
+        with the API.
+      </item>
+    </fix>
+  </release>
+
+  <release
+    name = "0.5"
+    date = "2011/11/07"
+  >
+    <new>
+      <item>
+        Code now computes number density for zero rest mass fermions directly
+        from integrated function.
+      </item>
+    </new>
+    <reorganization>
+      <item>
+        Restriction that fermion number density be non-zero has been removed.
+      </item>
+    </reorganization>
+  </release>
+
+  <release
+    name = "0.4"
+    date = "2011/05/10"
+  >
+    <new>
+      <item>
+        Code is now hosted at SourceForge.net.
+      </item>
+      <item>
+        The examples/ directory now includes a regression test script
+        generator.
+      </item>
+    </new>
+    <reorganization>
+      <item>
+        Examples directory has moved to same level as src/.
+      </item>
+      <item>
+        Example codes now have descriptive names.
+      </item>
+    </reorganization>
+  </release>
+
+  <release
+    name = "0.3"
+    date = "2011-02-15"
+  >
+    <fix>
+      <item>
+        Documentation has been corrected to state that computeChemicalPotential() routines return mu/kT.
+      </item>
+      <item>
+        Unreliable floating point comparisons have been fixed.
+      </item>
+      <item>
+        gsl-config --cflags has been added to allow examples Makefile to find gsl includes.
+      </item>
+    </fix>
+    <reorganization>
+      <item>
+        Creation of tmp directory for examples is now automatic.
+      </item>
+    </reorganization>
+  </release>
+
+  <release
+    name = "0.2"
+    date = "2010-01-23"
+  >
+    <fix>
+      <item>
+        Prototypes on accessor functions have been changed for better
+        const correctness.  This is a backwards-compatible change.
+      </item>
+      <item>
+        Tutorial typos have been fixed.
+      </item>
+    </fix>
+  </release>
+
+  <release
+    name = "0.1"
+    date = "2009-08-27"
+  >
+    <new>
+      <item>
+        Initial Release
+      </item>
+    </new>
+  </release>
+
+</release_log>

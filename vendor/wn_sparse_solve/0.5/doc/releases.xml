@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--////////////////////////////////////////////////////////////////////////////
+// <file type="public">
+//
+//   <license>
+//     Please see the src/README.txt in this distribution for more copyright
+//     and license information.
+//   </license>
+//
+//   <description>
+//     <abstract>
+//       xml file giving the release log
+//     </abstract>
+//     <keywords>
+//       xml, example, releases
+//     </keywords>
+//   </description>
+//
+//   <authors>
+//     <current>
+//       <author userid="mbradle" start_date="2011/05/05" />
+//     </current>
+//     <previous>
+//     </previous>
+//   </authors>
+//
+//   <compatibility>
+//     Tested in mozilla, firefox.
+//   </compatibility>
+//
+// </file>
+/////////////////////////////////////////////////////////////////////////////-->
+
+<release_log>
+
+  <release
+    name = "0.5"
+    date = "2013-12-17"
+  >
+    <fix>
+      <item>
+        Unsupported Sparskit routines have been modified for thread safety.
+      </item>
+    </fix>
+    <reorganization>
+      <item>
+        Unnecessary matrix scalings have been removed.
+      </item>
+    </reorganization>
+  </release>
+
+  <release
+    name = "0.4"
+    date = "2012-10-25"
+  >
+    <new>
+      <item>
+        Code is now hosted at SourceForge.net.
+      </item>
+    </new>
+    <fix>
+      <item>
+        size_t's are cast to ints in ilu preconditioner for more portable
+        interfacing with Sparskit.
+      </item>
+      <item>
+        Code uses extern "C" for c++ compilers.
+      </item>
+    </fix>
+    <reorganization>
+      <item>
+        Examples Makefile now can download Sparskit directly.
+      </item>
+      <item>
+        Examples Makefile now directly makes the Sparskit library.
+      </item>
+    </reorganization>
+  </release>
+
+  <release
+    name = "0.3"
+    date = "2009-02-20"
+  >
+    <fix>
+      <item>
+        my_ilu_transpose_solver in ilu_solvers.c in the examples/ directory
+        now correctly includes missing line to get number of rows.
+      </item>
+      <item>
+        Documentation for WnSparseSolve__Exp__solve() has been fixed.
+      </item>
+      <item>
+        Checks on input have been added to a number of API routines.
+      </item>
+      <item>
+        Examples have been fixed to work with 64-bit compilers.  In particular,
+        print out of size_t variables are cast to unsigned longs for
+        portability.  Those working exclusively on 64-bit machines may wish
+        to remove the casts and use the %lu, %llu, or %z format code, as
+        appropriate.
+      </item>
+    </fix>
+    <reorganization>
+      <item>
+        README.txt has been removed from examples/ directory for easier
+        maintenance.  Copyright information is in src/README.txt.
+      </item>
+    </reorganization>
+  </release>
+
+  <release
+    name = "0.2"
+    date = "2008-07-19"
+    tag  = "wn_sparse_solve-0-4"
+  >
+    <fix>
+      <item>
+        Example codes now correctly compile with g++.
+      </item>
+      <item>
+        Example codes now can be correctly profiled with gprof.
+      </item>
+      <item>
+        src/examples/README.txt now correctly includes example6.c and
+        my_convergence_tester.c/h In directory contents section.
+      </item>
+    </fix>
+    <reorganization>
+      <item>
+        Where relevant, a number of unsigned int variables have been converted
+        to size_t.
+      </item>
+    </reorganization>
+  </release>
+  <release
+    name = "0.1"
+    date = "2008-06-30"
+    tag  = "wn_sparse_solve-0-2"
+  >
+    <new>
+      <item>
+        Initial Release
+      </item>
+    </new>
+  </release>
+</release_log>

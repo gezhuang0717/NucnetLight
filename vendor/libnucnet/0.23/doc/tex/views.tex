@@ -1,0 +1,298 @@
+%///////////////////////////////////////////////////////////////////////////////
+% <file type="public">
+%
+% <license>
+%   See the README_module.xml file for this module for copyright and license
+%   information.
+% </license>
+%   <description>
+%     <abstract>
+%       This is the Webnucleo Report for views libnucnet.
+%     </abstract>
+%     <keywords>
+%       libnucnet Module, webnucleo report, view
+%     </keywords>
+%   </description>
+%
+%   <authors>
+%     <current>
+%       <author userid="mbradle" start_date="2012/03/29" />
+%     </current>
+%     <previous>
+%     </previous>
+%   </authors>
+%
+%   <compatibility>
+%     TeX (Web2C 7.4.5) 3.14159 kpathsea version 3.4.5
+%   </compatibility>
+%
+% </file>
+%///////////////////////////////////////////////////////////////////////////////
+%
+% This is a sample LaTeX input file.  (Version of 9 April 1986)
+%
+% A '%' character causes TeX to ignore all remaining text on the line,
+% and is used for comments like this one.
+
+\documentclass{article}    % Specifies the document style.
+
+\usepackage[dvips]{graphicx}
+\usepackage{hyperref}
+
+\def\apj{Astrophys. J}
+
+                           % The preamble begins here.
+\title{Webnucleo Technical Report: Views in libnucnet} % Declares the document's title.
+
+\author{Bradley S. Meyer}
+%\date{December 12, 1984}   % Deleting this command produces today's date.
+
+\begin{document}           % End of preamble and beginning of text.
+
+\maketitle                 % Produces the title.
+
+
+This technical report describes how to work with views in libnucnet.
+
+\section{Views}
+
+In libnucnet, a Libnucnet\_\_Nuc structure stores data for a collection
+of nuclides while
+a Libnucnet\_\_Reac structure stores data for a collection of
+reactions.  A network, which
+is stored as a Libnucnet\_\_Net structure,
+is then a combination of the nuclide collection
+and the reaction collection.  Valid
+reactions in the network are nucleon-number-conserving,
+lepton-number-conserving, and charge-conserving reactions in the
+Libnucnet\_\_Reac structure among nuclides stored in the network's
+Libnucnet\_\_Nuc structure.  A reaction in the network is invalid
+if it does not conserve nucleon number, lepton number, or charge, or if
+any of the reactants or products are not included among the network's
+nuclide collection.
+
+Libnucnet\_\_Nuc and Libnucnet\_\_Reac structures store a considerable
+amount of information about their nuclides and reactions.  In many cases
+it is desirable to have a subset of these nuclides or reactions.  The
+libnucnet API provides the routines Libnucnet\_\_Nuc\_\_extractSubset()
+and Libnucnet\_\_Reac\_\_extractSubset(), which, respectively, create
+new nuclide and reaction collections from the original collections
+through the use of XPath expressions.  Importantly, these new collections
+"own" the nuclide or reaction data in the sense that the extractSubset()
+routines make copies of those data from the original collections.  Any
+modification of the data in the extracted subset does not affect the
+data in the original collection.
+
+While these new collections have their uses, it is often preferable to
+have a ``view'' of the collection.  A view is a subset of collection
+that does not own its own data.  Rather, the data in the view are simply
+pointers to the data in the original collection.
+An advantage of a view over an extracted subset, then, is that it requires a
+considerably smaller amount of memory than the original
+collection does.  Also, since the view does not own its data,
+modifying the data for a nuclide or reaction in a view modifies the
+nuclide's or reaction's data in the original collection.  This means,
+for example, that one can modify the data in a nuclide collection
+for neon isotopes by getting a view of the collection that only includes
+the neon isotopes and iterating over the species in the view and modifying
+their data.  This automatically modifies the data for the neon isotopes
+in the original collection.
+
+The possible views a user can create are a Libnucnet\_\_NucView, a view
+of a nuclide collection, a Libnucnet\_\_ReacView, a view of a reaction
+collection, and a Libnucnet\_\_NetView, a view of a network.  It is important
+to note that the only reactions included in a Libnucnet\_\_NetView are
+ones that are valid for that view.
+
+\section{Libnucnet\_\_NucView}
+
+A Libnucnet\_\_NucView is a view of a nuclide collection.  It is created
+with the Libnucnet\_\_NucView\_\_new() routine that takes as arguments
+the original Libnucnet\_\_Nuc pointer and an XPath expression to select
+the species to include from the original collection in the view.  The
+view collection may be accessed via the API routine
+Libnucnet\_\_NucView\_\_getNuc(), and the pointer returned from this
+routine may be passed into any routine that takes a Libnucnet\_\_Nuc
+structure.  The user then frees the view with
+Libnucnet\_\_Nuc\_\_free().
+
+For example, to count the number of neon isotopes in an existing nuclide
+collection p\_nuc, one could create a view of neon isotopes and get the
+number of species in it:
+\begin{verbatim}
+p_view = Libnucnet__NucView__new( p_nuc, "[a = 10]" );
+
+printf(
+  "The number of neon isotopes is %lu.\n",
+  Libnucnet__Nuc__getNumberOfSpecies(
+    Libnucnet__NucView__getNuc( p_view )
+  )
+);
+
+Libnucnet__NucView__free( p_view );
+
+\end{verbatim}
+It is important to note that p\_nuc and all its data still exist after
+these operations since p\_view never owned p\_nuc's data.
+
+\section{Libnucnet\_\_ReacView}
+
+A Libnucnet\_\_ReacView structure is a view of a reaction collection.
+It is exactly analogous to a Libnucnet\_\_NucView structure in that it
+is created with Libnucnet\_\_ReacView\_\_new(), which takes as arguments
+an existing reaction collection and an XPath expression to select the
+reactions to include.  The view collection is accessed with
+Libnucnet\_\_ReacView\_\_getReac(), and the view is freed with
+Libnucnet\_\_ReacView\_\_free().
+
+\section{Libnucnet\_\_NetView}
+
+A Libnucnet\_\_NetView structure is a view of a Libnucnet\_\_Net structure
+containing a subset of species of the original structure and valid
+reactions among the view's species.  It is created with
+Libnucnet\_\_NetView\_\_new(), which takes the original network and
+two XPath expressions as arguments.  The first argument is the XPath
+expression that selects the nuclides from the original network to include
+in the view.  The second XPath expression selects the reactions to include
+in the view.  The routine returns a view containing a subset of the
+species in the original network and the valid reactions among those species
+that satisfy the reaction XPath constraint.
+
+After a view has been created, it is possible to add or remove reactions
+from the view with Libnucnet\_\_NetView\_\_addReaction() or
+Libnucnet\_\_NetView\_\_removeReaction().  It is worth noting that
+since adding a reaction
+requires a check that the reaction is valid for the view, this operation
+is slower than removing the reaction, which simply deletes the reaction
+pointer from the underlying hash.
+A network view can be accessed with
+Libnucnet\_\_NetView\_\_getNet().  A user can copy a network view
+with Libnucnet\_\_NetView\_\_copy(), which returns a new network
+view that is a copy of the input one.  The user frees a view with
+Libnucnet\_\_NetView\_\_free().
+
+While network views can be used on their own, it is also possible to
+store them in Libnucnet\_\_Zones.  This is convenient because the user
+can simply lookup a view rather than create it, an operation that requires
+numerous checks on reaction validity.  An existing network view can
+be added to an existing zone with the command
+Libnucnet\_\_Zone\_\_updateNetView(), which adds the view to the
+zone if it did not previously exist or replaces the existing view with
+the new one.  This routine takes as arguments the zone, three labels for
+the view, and the view.  The user subsequently looks up the view from the
+zone with the three labels using Libnucnet\_\_Zone\_\_getNet().
+
+It is frequently the case that the logical choices for two of the labels
+for a view in a zone are the XPath expressions that created the view,
+especially if no reactions have been added to or removed from the view
+since it was created.  In this case, the third label can simply be NULL.
+The labels, however, need not be XPath expressions.  For example, the
+network evolution (change of abundances with time) is computed from an
+evolution network view, which has labels (EVOLUTION\_NETWORK, NULL, NULL).
+To change the evolution network, then, the user would create a view
+and then update the evolution view in p\_zone, the zone of interest.  To
+limit the evolution network to $(n,\gamma)$ reactions on nuclei with
+$Z \leq 50$, the user would write:
+\begin{verbatim}
+p_view =
+  Libnucnet__NetView__new(
+    "[z <= 50]",
+    "[reactant = 'n' and product = 'gamma']"
+  );
+
+Libnucnet__Zone__updateNetView(
+  p_zone,
+  EVOLUTION_NETWORK,
+  NULL,
+  NULL,
+  p_view
+);
+
+\end{verbatim}
+libnucnet routines would then use this network to evolve abundances until
+the evolution view was updated again.
+
+Because a network view is created from a parent network,
+it is conceivable that the parent network might have changed since the
+view was generated.  For example, suppose a user generates
+Libnucnet\_\_NetView * p\_view from Libnucnet\_\_Net * p\_net.  Now suppose
+the user adds a new species to the nuclide collection 
+in p\_net.  p\_view will not include that
+species.  At this point the user will want to delete p\_view and generate
+a new view.
+
+A user can check whether the parent network of a view has been updated
+since the view was generated with the API routine
+Libnucnet\_\_NetView\_\_wasNetUpdated().  This routine returns 1 (true)
+if the parent network has been updated since the view was generated
+or 0 (false) if not.  Checking for an update will allow a user to decide
+whether to regenerate a view or not.
+
+A user can iterate over the network views stored in a zone
+with Libnucnet\_\_Zone\_\_iterateNetViews() and apply a user defined
+Libnucnet\_\_NetView\_\_iterateFunction to them.  To do so, the
+user writes a routine with prototype
+\begin{verbatim}
+int
+my_net_view_iterator(
+  Libnucnet__NetView * p_view,
+  const char * s_label1,
+  const char * s_label2,
+  const char * s_label3,
+  void * p_data
+);
+\end{verbatim}
+In this prototype, p\_data is a pointer to a user-defined
+data structure carrying extra data for the routine.
+The routine must return 1 (true) for iteration to continue
+or 0 (false) for iteration to stop.
+
+The user then iterates over the network views in p\_zone and
+applies my\_net\_view\_iterator using p\_data with
+\begin{verbatim}
+Libnucnet__Zone__iterateNetViews(
+  p_zone,
+  s_1,
+  s_2,
+  s_3,
+  (Libnucnet__NetView__iterateFunction) my_net_view_iterator,
+  p_data
+);
+\end{verbatim}
+This iterates over all network views in p\_zone that have labels
+that match s\_1, s\_2, and s\_3 and applies my\_net\_view\_iterator
+to each view.  If s\_1, s\_2, or s\_3 is NULL, any view label is a match;
+thus, supplying NULL for s\_1, s\_2, and s\_3 will iterate over all
+network views in p\_zone.
+
+Once a network view is added to a zone with
+Libnucnet\_\_Zone\_\_updateNetView(), the zone owns the view.  This
+means that the memory for the view will be freed when the zone is freed.
+If a network view has not been added to a zone, it is the user's
+responsibility to free the memory with Libnucnet\_\_NetView\_\_free().
+
+As of version 0.19, it is possible to copy all network views from one zone to
+another and to clear all network views from a zone without deleting the zone.
+Copying network views from one zone to another is done with the
+libnucnet API routine Libnucnet\_\_Zone\_\_copy\_net\_views().  This routine
+allows a user to avoid having
+to create a new network view in the destination
+zone, a time consuming process since
+all reactions must be checked for validity when the new view is created.
+Of course the underlying network for the source zone and the destination zone
+must be the same.  libnucnet will invoke error handling if the underlying
+networks are not the same.
+
+Clearing all network views from a zone
+is done with the libnucnet API routine
+Libnucnet\_\_Zone\_\_clearNetViews().  A user might wish to clear the
+network views from a zone, for example,
+when separate zones contain the results of
+separate nucleosynthesis calculations.  If the calculation for a given
+zone is completed, the network views in that zone may no longer be needed.
+If the user wants to retain the zone, the memory for the views will remain
+allocated unless the user clears the network view from the zone.
+Doing so will free up memory for the nucleosynthesis
+calculations in subsequent zones.
+
+\end{document}

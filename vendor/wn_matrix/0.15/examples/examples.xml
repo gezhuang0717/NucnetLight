@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<!--////////////////////////////////////////////////////////////////////////////
+// <file type="public">
+//
+//   <license>
+//     See src/README.txt in this distribution for copyright and license
+//     information.
+//   </license>
+//
+//   <description>
+//     <abstract>
+//       xml file giving description and call sequence for examples codes.
+//     </abstract>
+//     <keywords>
+//       xml, example, code
+//     </keywords>
+//   </description>
+//
+//   <authors>
+//     <current>
+//       <author userid="mbradle" start_date="2007/09/28" />
+//     </current>
+//     <previous>
+//     </previous>
+//   </authors>
+//
+//   <compatibility>
+//     Tested in mozilla, firefox.
+//   </compatibility>
+//
+// </file>
+/////////////////////////////////////////////////////////////////////////////-->
+
+<examples>
+
+  <general_information>
+
+  <module>wn_matrix</module>
+
+  <api_doc_files>
+
+    <file name="WnMatrix.h">
+      <structures>
+        <structure>WnMatrix</structure>
+        <structure>WnMatrix__Arrow</structure>
+        <structure>WnMatrix__Coo</structure>
+        <structure>WnMatrix__Csr</structure>
+        <structure>WnMatrix__Line</structure>
+        <structure>WnMatrix__Vector</structure>
+        <structure>WnMatrix__Yale</structure>
+      </structures>
+    </file>
+
+  </api_doc_files>
+
+  <authors>
+    <author>
+      <name>mbradle</name>
+      <date>2007/09/28</date>
+    </author>
+  </authors>
+
+  <intro>
+    This tutorial demonstrates how to use the example codes in the wn_matrix
+    distribution src/examples directory. The sample input files
+    used in the tutorial are included in the distribution release and may be
+    located in the data_pub directory.
+  </intro>
+
+  </general_information>
+
+  <example_class name="WnMatrix">
+
+  <example name="create_matrix">
+    <title>
+       Create a matrix, store elements, and scale them.
+    </title>
+    <execution>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_matrix_to_file">
+    <title>
+      Print out a matrix to a file.
+    </title>
+    <execution>
+      <in>
+        <item type="arg">2.0</item>
+      </in>
+      <out>
+        <item type="arg">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="convert_to_csr">
+    <title>
+      Convert a matrix to compressed row format.
+    </title>
+    <execution>
+      <out>
+        <item type="arg">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="convert_to_yale">
+    <title>
+      Convert a matrix to Yale sparse format.
+    </title>
+    <execution>
+      <out>
+        <item type="arg">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="insert_and_extract">
+    <title>
+      Insert a smaller matrix into a larger one and extract a smaller matrix
+      from a larger one.
+    </title>
+    <execution>
+      <out>
+        <item type="arg">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="ascii_matrix_to_xml">
+    <title>
+      Convert ascii coordinate matrix data into XML data and write to a file.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/matrix.txt</item>
+      </in>
+      <out>
+        <item type="arg">output.xml</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        Output the matrix element values in format other than default.
+      </note>
+      <in>
+        <item>../data_pub/matrix.txt</item>
+      </in>
+      <out>
+        <item type="arg">output_with_formatting.xml</item>
+      </out>
+      <in>
+        <item type="post_arg">%.12e</item>
+      </in>
+    </execution>
+  </example>
+
+  <example name="print_xml_matrix">
+    <title>
+      Print out the data from a matrix in XML format.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/matrix.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+         Use an XPath expression to select out particular rows, columns,
+         or values:
+      </note>
+      <in>
+        <item>../data_pub/matrix.xml</item>
+        <item>"[row &lt; 3 or value &gt; 0]"</item>
+      </in>
+      <out>
+        <item type="file">output_xpath.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="print_row_or_column">
+    <title>
+      Print out the non-zero elements of a row or column of a matrix.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/matrix.xml</item>
+        <item>row</item>
+        <item>1</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        Try other rows or columns.  For example, try
+      </note>
+      <in>
+        <item>../data_pub/matrix.xml</item>
+        <item>column</item>
+        <item>2</item>
+      </in>
+      <out>
+        <item type="file">output_column.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="insert_and_delete">
+    <title>
+      Insert and remove rows and columns.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/matrix.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="get_transfer">
+    <title>
+      Get the transfer matrix form of a matrix.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/matrix.xml</item>
+      </in>
+      <out>
+        <item type="arg">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="get_copy_and_transpose">
+    <title>
+      Get a copy of a matrix and the transpose of a matrix.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/matrix.xml</item>
+      </in>
+      <out>
+        <item type="arg">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="vector_to_xml">
+    <title>
+      Convert ascii vector data into XML data and write to a file.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/vector.txt</item>
+      </in>
+      <out>
+        <item type="arg">output.xml</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        To output the vector data in a format other than the default,
+        enter the format code as well:
+      </note>
+      <in>
+        <item>../data_pub/vector.txt</item>
+      </in>
+      <out>
+        <item type="arg">output_with_formatting.xml</item>
+      </out>
+      <in>
+        <item type="post_arg">%.14e</item>
+      </in>
+    </execution>
+  </example>
+
+  <example name="print_xml_vector">
+    <title>
+      Print out the data from a vector in XML format.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/vector.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+         Use an XPath expression to select out particular elements (here
+         only the elements larger than zero):
+      </note>
+      <in>
+        <item>../data_pub/vector.xml</item>
+        <item>"[. &gt; 0]"</item>
+      </in>
+      <out>
+        <item type="file">output_xpath.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="convert_coo_to_csr">
+    <title>
+      Read in coordinate matrix data from an XML file, convert to compressed
+      sparse row format, and output to an XML file.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/matrix.xml</item>
+      </in>
+      <out>
+        <item type="arg">csr.xml</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        To output the matrix element values with a format other than the
+        default, input the desired format code:
+      </note>
+      <in>
+        <item>../data_pub/matrix.xml</item>
+      </in>
+      <out>
+        <item type="arg">csr_with_formatting.xml</item>
+      </out>
+      <in>
+        <item type="post_arg">%.12e</item>
+      </in>
+    </execution>
+  </example>
+
+  <example name="convert_coo_to_yale">
+    <title>
+      Read in coordinate matrix data from an XML file, convert to Yale
+      sparse format, and output to an XML file.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/matrix.xml</item>
+      </in>
+      <out>
+        <item type="arg">yale.xml</item>
+      </out>
+    </execution>
+    <execution>
+      <note>
+        To output the matrix element values with a format other than the
+        default, input the desired format code:
+      </note>
+      <in>
+        <item>../data_pub/matrix.xml</item>
+      </in>
+      <out>
+        <item type="arg">yale_with_formatting.xml</item>
+      </out>
+      <in>
+        <item type="post_arg">%.10f</item>
+      </in>
+    </execution>
+  </example>
+
+  <example name="matrix_times_vector">
+    <title>
+      Multiply a matrix by a vector and a transpose matrix by a vector.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/matrix.xml</item>
+        <item>../data_pub/vector.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="solve_matrix_equation">
+    <title>
+      Solve a matrix equation.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/matrix.xml</item>
+        <item>../data_pub/vector.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="get_arrow_matrix">
+    <title>
+      Convert to arrow matrix form.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/matrix2.xml</item>
+        <item>3</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  <example name="solve_by_arrow">
+    <title>
+      Solve a matrix equation with the arrow solver.
+    </title>
+    <execution>
+      <in>
+        <item>../data_pub/matrix2.xml</item>
+        <item>../data_pub/vector2.xml</item>
+      </in>
+      <out>
+        <item type="file">output.txt</item>
+      </out>
+    </execution>
+  </example>
+
+  </example_class>
+
+</examples>

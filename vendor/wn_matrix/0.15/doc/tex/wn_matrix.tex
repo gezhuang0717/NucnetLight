@@ -1,0 +1,192 @@
+%///////////////////////////////////////////////////////////////////////////////
+% <file
+%   repository_path  = "$Source: /pub/cvsprojects/nucleo/web/home/modules/wn_matrix/doc/tex/wn_matrix.tex,v $"
+%   revision         = "$Revision: 1.14 $"
+%   date             = "$Date: 2008/06/04 15:28:10 $"
+%   tag              = "$Name: wn_matrix-0-24 $"
+%   template_version = "cp_template.0.12"
+% >
+%
+% <license>
+%   See the README_module.xml file for this module for copyright and license
+%   information.
+% </license>
+
+%   <description>
+%     <abstract>
+%       This is the Webnucleo Report for the wn_matrix Module.
+%     </abstract>
+%     <keywords>
+%       wn_matrix Module, webnucleo report
+%     </keywords>
+%   </description>
+%
+%   <authors>
+%     <current>
+%       <author userid="dcadams" start_date="2006/05/11" />
+%     </current>
+%     <previous>
+%     </previous>
+%   </authors>
+%
+%   <compatibility>
+%     TeX (Web2C 7.4.5) 3.14159 kpathsea version 3.4.5
+%   </compatibility>
+%
+% </file>
+%///////////////////////////////////////////////////////////////////////////////
+%
+% This is a sample LaTeX input file.  (Version of 9 April 1986)
+%
+% A '%' character causes TeX to ignore all remaining text on the line,
+% and is used for comments like this one.
+
+\documentclass{article}    % Specifies the document style.
+
+\usepackage{hyperref}
+
+                           % The preamble begins here.
+\title{Webnucleo Technical Report: wn\_matrix Module}  
+
+\author{David Adams and Bradley S. Meyer}
+%\date{December 12, 1984}   % Deleting this command produces today's date.
+
+\begin{document}           % End of preamble and beginning of text.
+
+\maketitle                 % Produces the title.
+
+The following will provide information regarding the routines that comprise
+the wn\_matrix Module. 
+The wn\_matrix Module is divided into two parts: routines that deal with 
+creating and managing the WnMatrix structure, and routines for performing matrix
+operations with the WnMatrix structures. 
+This report describes the WnMatrix structures and
+details of some of the wn\_matrix routines.
+The module itself can be found at:
+\begin{center}
+http://www.webnucleo.org/home/modules/wn\_matrix/
+\end{center}
+
+\section{wn\_matrix Structures Overview}  
+                                       
+{\em WnMatrix} is a structure for storing a matrix.  As of version 0.2,
+elements of the matrix are stored in a multi-dimensional hash,
+which provides excellent flexibility in
+adding and removing elements from the matrix.
+The hash routines used are those from libxml, the xml C parser and toolkit of
+the Gnome.  Version 0.1, now no longer supported, used doubly-linked lists,
+which could require $\cal O$(N) operations,
+where N is the number of columns in the
+matrix, to store and retrieve elements.  The hash only requires $\cal O$(1)
+operations.
+
+The WnMatrix structure is central to the module, as the majority of
+the routines contained 
+within the module are used to either operate on the structure or retrieve 
+information about its contents.  The structure itself is principally comprised
+of a pointer to a libxml xmlHashTable pointer, in which the non-zero elements
+are stored.  Other structure elements are unsigned ints containing the
+number of rows and columns in the matrix (the number of non-zero elements
+is not kept but rather is retrieved by the libxml xmlHashSize routine).
+Finally, there is a pointer to an internal data structure for use in callback
+routines on the hash.
+
+As of version 0.3, the clear and scale matrix routines are correct.
+Version 0.2 used hash callbacks for these routines but modified the hash
+during the callbacks.  This naturally led to undefined behavior.  Version
+0.3 also adds getCopy and getTranspose routines to the API.  These return
+new matrices that the caller must free with WnMatrix\_\_free when no longer
+needed.
+
+
+{\em WnMatrix\_\_Line} is a structure for storing data relevant to the non-zero
+elements of a line in the matrix, that is, a row or a column.  These data
+are stored in the structure as arrays.
+
+As of release 0.4, we have introduced three new structures, namely,
+{\em WnMatrix\_\_Coo}, {\em WnMatrix\_\_Csr}, and {\em WnMatrix\_\_Yale}
+for storing the sparse matrix in coordinate, compressed sparse row, and Yale
+sparse matrix format, respectively.  We have also rearranged the API to
+accomodate these changes, which means there is a backward incompatibilty between
+release 0.4 and earlier versions.  The reason for the change is to relieve the
+user of the burden of allocating memory for these alternative sparse matrix
+formats.  Thus, for example, when the user calls {\em WnMatrix\_\_getCoo()},
+a pointer to a coordinate matrix is returned.  The {\em WnMatrix\_\_getCoo()}
+routine does all the memory allocation.  The routine
+{\em WnMatrix\_\_Coo\_\_getRowVector()} then returns the coordinate row matrix
+array (with a number of elements equal to the number of non-zero elements
+in the matrix).  The user frees the memory for the coordinate matrix (and,
+consequently, the row array) by calling the {\em WnMatrix\_\_Coo\_\_free()}
+routine.  Example codes in the src/examples directory of the distribution
+demonstrate how this works.
+
+Our philosophy has been that the user should not have to worry about the
+data structures used by wn\_matrix.  Instead, we intend that the user
+should interact with the wn\_matrix structures via the API routines.
+For this reason, the API does not make the content of
+the wn\_matrix structures public.
+Nevertheless, the interested user may find their prototypes located in the 
+WnMatrix header file {\tt WnMatrix.h}.
+
+\section{wn\_matrix Routines}
+
+For documentation on the wn\_matrix routines, see the WnMatrix.h file
+in the Overview in the Technical Resources for the current release.
+The documentation provides a brief description of each routine, the prototype,
+pre- and post-conditions, and examples on using the routines.
+
+As of release 0.5, we have introduced routines to read input matrix data
+from XML and output matrix data to XML.  For example, the routine
+{\em WnMatrix\_\_new\_from\_xml()} inputs matrix data in row, column, value
+triplets from an XML file and creates a matrix based on those data.  The
+routines {\em WnMatrix\_\_Coo\_\_writeToXmlFile()},
+{\em WnMatrix\_\_Coo\_\_writeToXmlFile()}, and
+{\em WnMatrix\_\_Coo\_\_writeToXmlFile()} output coordinate, compressed sparse
+row, and Yale matrix forms of the matrix to XML output.  A new routine
+also allows the user to validate the input XML file
+against Webnucleo.org's input matrix
+\href{http://www.webnucleo.org/home/modules/wn_matrix/0.5/xsd_pub/coordinate_matrix.xsd}{schema}
+for version 0.5 (future releases will have similar xsd\_pub directories).
+For more details, the user should consult the API documentation.
+
+As of version 0.7, wn\_matrix uses the gnu gsl scientific library vector
+structure when interacting with vectors.  This change of course means that
+wn\_matrix now depends on gsl as well as libxml.  We have added routines to
+parse in vector data from an xml file
+({\em WnMatrix\_\_new\_gsl\_vector\_from\_xml()}),
+to validate the xml ({\em WnMatrix\_\_is\_valid\_vector\_input\_xml()}),
+and to dump a gsl\_vector to an xml file
+({\em WnMatrix\_\_write\_gsl\_vector\_to\_xml\_file()}).
+While it is possible to interact with the elements of the gsl\_vector data
+structure directly (see the gsl documentation),
+we have also added API routines to get the size of the
+vector ({\em WnMatrix\_\_get\_gsl\_vector\_size()}) and to retrieve the data
+array from the gsl\_vector ({\em WnMatrix\_\_get\_gsl\_vector\_array()}).
+
+Our change over to using gsl\_vectors simplifies the wn\_matrix API for
+the matrix times vector and transpose matrix times vector routines.
+It nevertheless introduces a backwards incompatibility.  While we could have
+kept the routines\\
+\\{\em WnMatrix\_\_getMatrixTimesVector()}\\
+\\and\\
+\\{\em WnMatrix\_\_getTransposeMatrixTimesVector()}\\ \\
+and deprecated them, we
+decided to remove them and replace them with\\
+\\{\em WnMatrix\_\_computeMatrixTimesVector()}\\ \\
+and\\ \\
+{\em WnMatrix\_\_computeTransposeMatrixTimesVector()}.\\ \\
+This is desirable since the old routines did not in fact retrieve (get)
+pre-existing data but rather computed them.  The new routines not only
+have simplified calls because they use gsl\_vectors,
+but their names also better reflect their functionality.
+
+Because wn\_matrix now depends on gsl, it made sense in version 0.7
+for us also to replace
+{\em WnMatrix\_\_getDenseMatrix()} that returned a double** with
+{\em WnMatrix\_\_getGslMatrix()} that returns a gsl\_matrix *.  This makes
+for a cleaner interface in the API and easier allocations.  Also, we
+added {\em WnMatrix\_\_solve()}, a routine that solves a matrix equation
+$A x = b$, given input vector $A$ and right-hand-side vector $b$.  The
+routine uses gsl linear algebra routines to solve the equation.
+
+\end{document}

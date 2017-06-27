@@ -1,0 +1,316 @@
+%///////////////////////////////////////////////////////////////////////////////
+% <file type="public">
+%
+% <license>
+%   See the src/README.txt file for this module for copyright and license
+%   information.
+% </license>
+%   <description>
+%     <abstract>
+%       This is the Webnucleo Report describing the computational details
+%       behind the wn_sparse_solve module.
+%     </abstract>
+%     <keywords>
+%       wn_sparse_solve, report
+%     </keywords>
+%   </description>
+%
+%   <authors>
+%     <current>
+%       <author userid="mbradle" start_date="2008/06/08" />
+%     </current>
+%     <previous>
+%     </previous>
+%   </authors>
+%
+%   <compatibility>
+%     TeX (Web2C 7.4.5) 3.14159 kpathsea version 3.4.5
+%   </compatibility>
+%
+% </file>
+%///////////////////////////////////////////////////////////////////////////////
+%
+% This is a sample LaTeX input file.  (Version of 9 April 1986)
+%
+% A '%' character causes TeX to ignore all remaining text on the line,
+% and is used for comments like this one.
+
+\documentclass{article}    % Specifies the document style.
+
+\usepackage{hyperref}
+
+                           % The preamble begins here.
+\title{Webnucleo Technical Report: wn\_sparse\_solve Module}  
+
+\author{Bradley S. Meyer}
+%\date{December 12, 1984}   % Deleting this command produces today's date.
+
+\begin{document}           % End of preamble and beginning of text.
+
+\maketitle                 % Produces the title.
+
+wn\_sparse\_solve is a Webnucleo module that provides a convenient interface
+between Webnucleo matrix codes and SPARSKIT2, a toolkit for basic sparse
+matrix operations by Yousef Saad.  This technical report provides information
+about the wn\_sparse\_solve structures, about the way users can provide
+their own preconditioner routines for solutions to sparse matrix equations,
+and about stopping criteria.
+The latest release of wn\_sparse\_solve is available at
+\begin{center}
+http://www.webnucleo.org/home/modules/wn\_sparse\_solve/
+\end{center}
+
+\section{wn\_sparse\_solve Structures Overview}  
+
+wn\_sparse\_solve has three basic structures.  These structures contain the
+settings for sparse matrix solutions, and the user can update the settings
+through wn\_sparse\_solve API routines.  The structures are the following:
+
+\begin{itemize}
+
+\item WnSparseSolve\_\_Mat
+
+This structure contains the settings for the SPARSKIT2 basic sparse solver
+routines, which solve the matrix equation
+
+\begin{equation}
+A x = b
+\label{eq:axb}
+\end{equation}
+
+where $A$ is a matrix, $b$ is the known right-hand-side (rhs) vector, and
+$x$ is the unknown vector.  SPARSKIT2 has a variety of iterative solvers
+available to find solutions to Eq. (\ref{eq:axb}), and WnSparseSolve\_\_Mat
+permits Webnucleo module users a straightforward interface to them.
+
+The user creates a solver with the API routine
+{\em WnSparseSolve\_\_Mat\_\_new()}.  The default settings for the solver are
+1) the solver method is the biconjugate gradient method, 2) the maximum number
+of iterations the solver will use is 100, 3) the relative tolerance is
+$10^{-8}$, 4) the absolute tolerance is $10^{-8}$, 5) there is no
+preconditioning of the matrix, 6) the stopping criteria are relative to
+the initial residual, and 7) debugging is turned off.  The user
+may then update these settings through API routines.
+
+\item WnSparseSolve\_\_Exp
+
+This structure contains the settings for use with SPARSKIT2's routines for
+solving the matrix equation
+
+\begin{equation}
+\frac{dY}{dt} = AY
+\label{eq:exp_dydt}
+\end{equation}
+
+where $Y$ is a vector, $A$ is a matrix, and $t$ is the time.  In general
+one seeks the solution $Y(t + \Delta t)$ given $Y(t)$.  The formal
+solution is by exponentiation of the matrix:
+
+\begin{equation}
+Y( t + \Delta t ) = exp(A \Delta t) Y( t )
+\label{eq:exp_sol}
+\end{equation}
+
+To find the solution, wn\_sparse\_solve uses a modified form of the
+SPARSKIT2 unsupported routine exppro.f.  The version of exppro.f used
+is in the src/ directory in the wn\_sparse\_solve installation.
+
+The user creates a new exponentiation solver with the API routine
+{\em WnSparseSolve\_\_Exp\_\_new()}.  The default settings for the solver
+are 1) the maximum number of iterations is 100, 2) the tolerance is 
+$10^{-8}$, 3) the workspace setting is 40 (the workspace setting must be 
+in the range between 1 and 60, inclusive), and 4) debugging is turned off.
+The user can update these settings through API routines.
+
+\item WnSparseSolve\_\_Phi
+
+This structure contains the settings for use with SPARSKIT2's routines for
+solving the matrix equation
+
+\begin{equation}
+\frac{dY}{dt} = AY + P
+\label{eq:phi_dydt}
+\end{equation}
+
+where $Y$ is a vector, $A$ is a matrix, $P$ is a constant matrix,
+and $t$ is the time.  In general
+one seeks the solution $Y(t + \Delta t)$ given $Y(t)$.
+
+To find the solution, wn\_sparse\_solve uses a modified form of the
+SPARSKIT2 unsupported routine phipro.f.  The version of phipro.f used
+is in the src/ directory in the wn\_sparse\_solve installation.
+
+The user creates a new exponentiation plus constant vector
+solver with the API routine
+{\em WnSparseSolve\_\_Phi\_\_new()}.  The default settings for the solver
+are 1) the maximum number of iterations is 100, 2) the tolerance is 
+$10^{-8}$, 3) the workspace setting is 40 (the workspace setting must be 
+in the range between 1 and 60, inclusive), and 4) debugging is turned off.
+The user can update these settings through API routines.
+
+\end{itemize}
+
+\section{Preconditioning}
+
+The rate of convergence of an iterative matrix equation solver typically
+depends on the condition number of the matrix.  A larger condition number
+will generally lead to a slower convergence.  Suppose one is solving the matrix
+equation in Eq. (\ref{eq:axb}).  A preconditioner is a matrix $P$ whose inverse
+is approximately the inverse of $A$.  Applying $P^{-1}$ to $A$ can reduce
+the condition number and lead to a more rapid convergence of the solution.
+
+A left preconditioner can be applied to the original equation to give
+\begin{equation}
+P^{-1} A x = P^{-1} b.
+\label{eq:pre_left}
+\end{equation}
+Since $P^{-1} \approx A^{-1}$, $P^{-1} b$ is an approximation to $x$.  For
+a right preconditioner, one writes
+\begin{equation}
+AP^{-1}P x = b.
+\label{eq:pre_right}
+\end{equation}
+One again finds $x \approx P^{-1} b$ for $P^{-1} \approx A^{-1}$.
+
+wn\_sparse\_solve allows a user to supply his or her own left preconditioner.
+In particular, a user supplies two routines.  One takes in a vector $y$ and
+returns $x$, where $x$ is the result of solving
+\begin{equation}
+P x = y.
+\end{equation}
+$P$ in this equation is an appropriate left preconditioner.
+The other routine takes in $y$ and returns $x$, where $x$ is the result of
+solving
+\begin{equation}
+P^T x = y.
+\label{eq:pt}
+\end{equation}
+Here $P^T$ is the transpose of $P$, the preconditioner.
+The prototype for both routines is:
+\begin{verbatim}
+gsl_vector *
+user_routine(
+  gsl_vector *p_input_vector,
+  void *p_user_data
+);
+\end{verbatim}
+The routines take in the vector $y$ as a pointer to a gsl\_vector.
+The user also supplies the preconditioner through his or her own data
+structure.  The routines take in the pointer to the user's data structure,
+appropriately cast.  Typically the user's data structure will supply either
+$P$, or, more likely, $P^{-1}$.  Note that the formal solution to
+Eq. (\ref{eq:pt}) is
+\begin{equation}
+x = \left(P^T\right)^{-1} y.
+\end{equation}
+However,
+\begin{equation}
+\left( P P^{-1} \right )^T = \left( P^{-1} \right )^T P^T = I,
+\end{equation}
+where $I$ is the identity matrix.  Hence,
+\begin{equation}
+\left( P^T \right )^{-1} = \left( P^{-1} \right )^T.
+\end{equation}
+A logical strategy then is to provide $P^{-1}$ and to write routines that
+return $P^{-1} y$ and $\left(P^{-1}\right)^T y$, that is, a matrix vector
+multiply and a transpose matrix vector multiply.  For example, if the
+matrix $A$ is diagonally dominant, a good choice for $P$ is a simply the
+matrix with the diagonal elements of $A$ along the diagonals of $P$ and
+the remaining elements of $P$ equal to zero, that is, the element
+on row $i$, column $j$ of $P$ is $P_{i,j} = A_{i,i}\delta_{i,j}$, where
+$\delta_{i,j}$ is the Kr\"onecker delta.  The elements of $P^{-1}$ then are
+$\left(P^{-1}\right)_{i,j} = \delta_{i,j} / A_{i,j}$.
+
+Once the user has constructed the preconditioner solver and preconditioner
+transpose solver, he or she passes these in to the sparse matrix solver
+via the API routines\\ \\
+{\em WnSparseSolve\_\_Mat\_\_updatePreconditionerSolver()}
+\\ \\
+and
+\\ \\
+{\em WnSparseSolve\_\_Mat\_\_updatePreconditionerTransposeSolver()}.
+\\ \\
+The user's data structure is passed into the sparse matrix solver via
+the API routine
+\\ \\
+{\em WnSparseSolve\_\_Mat\_\_updatePreconditionerUserData()}.
+\\ \\ 
+The wn\_sparse\_solve API documentation and the example codes provided in
+the wn\_sparse\_solve distribution demonstrate how to carry out these steps.
+
+\section{Stopping Criteria}
+
+The standard stopping criterion for an iterative solver is when the residual,
+defined as
+\begin{equation}
+{\rm residual} = || Ax - b ||
+\label{eq:residual}
+\end{equation}
+reaches a sufficiently small value.  In Eq. (\ref{eq:residual}), the $||.||$
+denotes the two-norm of a vector.  If $v \equiv (v_1, v_2, ..., v_n)$, then
+\begin{equation}
+||v|| = \sqrt{\sum_{i=1}^n v_i^2}.
+\end{equation}
+Clearly if the residual is precisely zero, $x$ is the solution to $Ax = b$.
+
+wn\_sparse\_solve provides three convergence methods.  The default method
+is ``initial residual'' method.  Here convergence is determined by comparing
+the residual relative to the initial residual.  Thus, if $x_{guess}$
+is the user-supplied guess vector, then the initial residual is
+\begin{equation}
+{\rm residual} = || Ax_{guess} - b ||
+\label{eq:initial_residual}
+\end{equation}
+After $i$ iterations, the solution vector is $x_i$, and iteration stops
+if
+\begin{equation}
+|| Ax_{i} - b || \leq \epsilon_{rel}|| Ax_{guess} - b || + \epsilon_{abs}.
+\label{eq:initial_residual_convergence}
+\end{equation}
+Here $\epsilon_{rel}$ is the relative tolerance and $\epsilon_{abs}$ is
+the absolute tolerance.
+
+Instead of the ``initial residual'' method, the user can use the ``rhs''
+(right-hand-side) method.  Here the convergence criterion is determined
+from the condition
+\begin{equation}
+|| Ax_{i} - b || \leq \epsilon_{rel}|| b || + \epsilon_{abs}.
+\label{eq:rhs_convergence}
+\end{equation}
+The user can switch between these methods via the API routine
+\\ \\
+{\em WnSparseSolve\_\_Mat\_\_updateConvergenceMethod()}.
+\\ \\ 
+
+For certain solvers, the user can also choose to supply his or her own
+convergence tester.  The prototype for the user's routine is
+\begin{verbatim}
+int
+user_tester_routine(
+  gsl_vector *p_change_vector,
+  gsl_vector *p_solution_vector,
+  void *p_user_data
+);
+\end{verbatim}
+Here p\_solution\_vector is a pointer to a
+gsl\_vector containing the current solution
+vector and p\_change\_vector is a pointer to a gsl\_vector containing
+the change in the solution vector over the last iteration.  p\_user\_data
+is a pointer to a user-defined data structure containing any extra data
+the user may wish to use in his or her routine.  The user's routine
+must return 0 (false) if the user's convergence criterion is not met and
+1 (true) if it is.
+
+Once the user-supplied convergence tester routine is written, the user
+provides it to the matrix solver via the API routine
+\\ \\
+{\em WnSparseSolve\_\_Mat\_\_updateConvergenceTester()}.
+\\ \\
+The extra data for the convergence tester are set through the API routine
+\\ \\
+{\em WnSparseSolve\_\_Mat\_\_updateConvergenceTesterUserData()}.
+\\ \\
+The wn\_sparse\_solve API documentation and an example in the wn\_sparse\_solve
+distribution demonstrate how to supply a user-defined convergence tester.
+  
+\end{document}

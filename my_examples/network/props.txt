@@ -1,0 +1,14 @@
+nuclide xpath
+rate modification view
+1
+[..]
+
+reaction xpath
+rate modification view
+1
+[reactant='kr101' and product='n' and product='electron']
+
+factor
+rate modification view
+1
+0
